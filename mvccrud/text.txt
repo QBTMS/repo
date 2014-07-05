@@ -1,0 +1,50 @@
+mvn archetype:generate \
+-DgroupId=com.prasadcompany.prasad \
+-DartifactId=mvccrud \
+-DarchetypeArtifactId=maven-archetype-webapp  \
+-DinteractiveMode=false
+
+    CREATE TABLE Employee(  
+       EMPID   INT NOT NULL AUTO_INCREMENT,  
+       EMPNAME VARCHAR(20) NOT NULL,  
+       AGE  INT NOT NULL,  
+       SALARY BIGINT NOT NULL,  
+       ADDRESS VARCHAR(20) NOT NULL,  
+       PRIMARY KEY (EMPID)  
+    );
+
+    CREATE TABLE Vehicle(
+        VNUMBER INT NOT NULL,
+        VTYPE VARCHAR(20) NOT NULL,
+        VOWNER VARCHAR(20) NOT NULL,
+        PRIMARY KEY (VNUMBER)
+    );
+
+
+CREATE TABLE IF NOT EXISTS USERS (
+  USERNAME varchar(45) NOT NULL,
+  PASSWORD varchar(45) DEFAULT NULL,
+  ENABLED enum('true','false') DEFAULT 'true',
+  PRIMARY KEY (USERNAME)
+) ENGINE=InnoDB;
+ 
+CREATE TABLE IF NOT EXISTS AUTHORITIES(
+  USERNAME varchar(45) NOT NULL,
+  AUTHORITY varchar(45) DEFAULT NULL,
+  PRIMARY KEY (USERNAME),
+  FOREIGN KEY (USERNAME) REFERENCES USERS(USERNAME) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
+ 
+INSERT INTO USERS (USERNAME, PASSWORD, ENABLED) VALUES ('prasad', '123', 'true');
+INSERT INTO USERS (USERNAME, PASSWORD, ENABLED) VALUES ('thilina', '123', 'true');
+ 
+INSERT INTO AUTHORITIES (USERNAME, AUTHORITY ) VALUES ('prasad', 'ROLE_ADMIN');
+INSERT INTO AUTHORITIES (USERNAME, AUTHORITY ) VALUES ('thilina', 'ROLE_MEMBER');
+
+insert into user (password, status, username) values ('123','ACTIVE','prasad');
+insert into user (password, status, username) values ('123','ACTIVE','test');
+
+insert into role (roleName) values ('ADMIN');
+
+insert into usersandroles(user_id,role_id) values (1,1);
+insert into usersandroles(user_id,role_id) values (2,1);
