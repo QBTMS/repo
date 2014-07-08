@@ -40,9 +40,12 @@ public class UserTask implements Serializable{
     @Column(name = "completenessLevel")
     private int completenessLevel;
 
+    @Column(name = "priority")
+    private int priority;
+
     public UserTask(){}
 
-    public UserTask(Date completedDate, String userName, String userTaskName, String userTaskDiscription, Date startedDate, Date toBeCompleted, int completenessLevel) {
+    public UserTask(Date completedDate, String userName, String userTaskName, String userTaskDiscription, Date startedDate, Date toBeCompleted, int completenessLevel, int priority) {
         this.completedDate = completedDate;
         this.userName = userName;
         this.userTaskName = userTaskName;
@@ -50,6 +53,7 @@ public class UserTask implements Serializable{
         this.startedDate = startedDate;
         this.toBeCompleted = toBeCompleted;
         this.completenessLevel = completenessLevel;
+        this.priority = priority;
     }
 
     public Long getUserTaskId() {
@@ -122,5 +126,13 @@ public class UserTask implements Serializable{
 
     public void setCompletenessLevel(int completenessLevel) {
         this.completenessLevel = completenessLevel;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 }

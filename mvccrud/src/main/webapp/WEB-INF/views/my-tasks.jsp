@@ -29,10 +29,17 @@
     <!-- Add custom CSS here -->
     <link href="css/modern-business.css" rel="stylesheet">
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+    <%--Tab script--%>
+    <script>
+        $(function () {
+            $('#myTab li:eq(1) a').tab('show');
+        });
+    </script>
 </head>
 
 <body>
-<a href="http://jquery.com/">jQuery</a>
+
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -77,6 +84,189 @@
         </div>
 
     </div>
+    <%--Tabssssssssssssssss--%>
+
+    <ul id="myTab" class="nav nav-tabs">
+        <li class="active"><a href="#myTask" data-toggle="tab">
+            My Tasks</a>
+        </li>
+        <li><a href="#myTaskSummary" data-toggle="tab">Task Summary</a></li>
+        <li><a href="#myTaskCharts" data-toggle="tab">Tasks Charts</a></li>
+        <li><a href="#groupTasks" data-toggle="tab">Tickets</a></li>
+        <li><a href="#groupTaskSummary" data-toggle="tab">Tickets Summary</a></li>
+        <li><a href="#groupTaskCharts" data-toggle="tab">Ticket Charts</a></li>
+        <li><a href="#overall" data-toggle="tab">Overall</a></li>
+        <li class="dropdown">
+            <a href="#" id="myTabDrop1" class="dropdown-toggle"
+               data-toggle="dropdown">Java <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="tabContainerDrop1">
+                <li><a href="#jmeter" tabindex="-1" data-toggle="tab">
+                    jmeter</a>
+                </li>
+                <li><a href="#ejb" tabindex="-1" data-toggle="tab">
+                    ejb</a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade in active" id="myTask">
+            <div class="row">
+
+                <div class="col-md-7">
+                    <h1>Task List</h1>
+                    <%--<c:if test="${!empty myTaskList}">--%>
+                    <table align="left" border="1">
+                        <tr>
+                            <th>Task Title</th>
+                            <th>Started date/time</th>
+                            <th>Target date/time</th>
+                            <th>Edit/Delete</th>
+                            <th>Progres(%)</th>
+                        </tr>
+
+                        <c:forEach items="${myTaskList}" var="myTaskList">
+                            <tr>
+                                <td><c:out value="${myTaskList.userTaskName}"/></td>
+                                <td><c:out value="${myTaskList.startedDate}"/></td>
+                                <td><c:out value="${myTaskList.toBeCompleted}"/></td>
+                                <td align="center"><a href="/mvccrud/edit-task.html?userTaskId=${myTaskList.userTaskId}">Edit</a> | <a href="/mvccrud/delete-task.html?userTaskId=${myTaskList.userTaskId}">Delete</a>
+                                <td>
+                                    <select onChange="window.location.href=this.value" name="${myTaskList.completenessLevel}">
+                                        <option value="${myTaskList.completenessLevel}">
+                                                ${myTaskList.completenessLevel}
+                                        </option>
+                                        <option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=10" >
+                                            10%
+                                        </option>
+                                        <option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=20" >
+                                            20%
+                                        </option>
+                                        <option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=30" >
+                                            30%
+                                        </option>
+                                        <option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=40" >
+                                            40%
+                                        </option>
+                                        <option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=50" >
+                                            50%
+                                        </option>
+                                        <option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=60" >
+                                            60%
+                                        </option>
+                                        <option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=70" >
+                                            70%
+                                        </option>
+                                        <option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=80" >
+                                            80%
+                                        </option>
+                                        <option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=90" >
+                                            90%
+                                        </option>
+                                        <option value="/mvccrud/complete-task.html?userTaskId=${myTaskList.userTaskId}" >
+                                            Mark as complete
+                                        </option>
+                                    </select>
+
+
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+
+                    <%--</c:if>--%>
+
+
+                </div>
+
+                <div class="col-md-5">
+                    <h2>Add New Task</h2>
+                    <form method="POST" action="/mvccrud/saveUserTask.html" commandName="addUserTaskCommand">
+                        <table>
+                            <tr>
+                                <td><input type="hidden" name="userTaskId" value="${editTask.userTaskId}"/><%--<span style="color: #ff0404; "><form:errors path='empName' /></span>--%>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Task Name</td>
+                                <td><input type="text" name="userTaskName" value="${editTask.userTaskName}"/><%--<span style="color: #ff0404; "><form:errors path='empName' /></span>--%>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Task Discription</td>
+                                <td><textarea cols="20" rows="4" name="userTaskDiscription" value="${editTask.userTaskDiscription}"></textarea><%--<span style="color: #ff0404; "><form:errors path='empAge' /></span></td>--%>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Task Started date/time</td>
+                                <td><input type="text" name="startedDate" id="startedDate" value="${editTask.startedDate}"/><%--<span style="color: #ff0404; "><form:errors path='salary' /></span></td>--%>
+                            </tr>
+                            <script>
+                                AnyTime.picker( "startedDate",
+                                        { format: "%M %d %Y %T", firstDOW: 1 } );
+                            </script>
+                            <tr>
+                                <td>Target dat/time</td>
+                                <td><input type="text" name="toBeCompleted" id="toBeCompleted" value="${editTask.toBeCompleted}"/><%--<span style="color: #ff0404; "><form:errors path='empAddress' /></span>--%>
+                                </td>
+                            </tr>
+                            <script>
+                                AnyTime.picker( "toBeCompleted",
+                                        { format: "%M %d %Y %T", firstDOW: 1 } );
+                            </script>
+                            <tr>
+                                <td colspan="2"><input type="submit" value="Submit"/></td>
+                            </tr>
+                        </table>
+
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="tab-pane fade" id="myTaskSummary">
+            <p>iOS is a mobile operating system developed and distributed by Apple
+                Inc. Originally released in 2007 for the iPhone, iPod Touch, and
+                Apple TV. iOS is derived from OS X, with which it shares the
+                Darwin foundation. iOS is Apple's mobile version of the
+                OS X operating system used on Apple computers.</p>
+        </div>
+        <div class="tab-pane fade" id="myTaskCharts">
+            <p>jMeter is an Open Source testing software. It is 100% pure
+                Java application for load and performance testing.</p>
+        </div>
+        <div class="tab-pane fade" id="groupTasks">
+            <p>Enterprise Java Beans (EJB) is a development architecture
+                for building highly scalable and robust enterprise level
+                applications to be deployed on J2EE compliant
+                Application Server such as JBOSS, Web Logic etc.
+            </p>
+        </div>
+        <div class="tab-pane fade" id="groupTaskSummary">
+            <p>jMeter is an Open Source testing software. It is 100% pure
+                Java application for load and performance testing.</p>
+        </div>
+        <div class="tab-pane fade" id="groupTaskCharts">
+            <p>Enterprise Java Beans (EJB) is a development architecture
+                for building highly scalable and robust enterprise level
+                applications to be deployed on J2EE compliant
+                Application Server such as JBOSS, Web Logic etc.
+            </p>
+        </div>
+        <div class="tab-pane fade" id="overall">
+            <p>Enterprise Java Beans (EJB) is a development architecture
+                for building highly scalable and robust enterprise level
+                applications to be deployed on J2EE compliant
+                Application Server such as JBOSS, Web Logic etc.
+            </p>
+        </div>
+    </div>
+
+
+
+    <%--Tabssss ended--%>
 
     <div class="row">
 
