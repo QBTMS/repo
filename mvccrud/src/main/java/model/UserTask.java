@@ -64,13 +64,13 @@ public class UserTask implements Serializable{
         this.userTaskId = userTaskId;
     }
 
-    public String getuserName() {
-        return userName;
-    }
-
-    public void setuserName(String userName) {
-        this.userName = userName;
-    }
+//    public String getuserName() {
+//        return userName;
+//    }
+//
+//    public void setuserName(String userName) {
+//        this.userName = userName;
+//    }
 
     public String getUserTaskName() {
         return userTaskName;
