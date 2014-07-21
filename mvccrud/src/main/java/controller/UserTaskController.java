@@ -88,14 +88,15 @@ public class UserTaskController {
         System.out.println(employee.getUserTaskDiscription());
 //        System.out.println(employee.getLastName());
 
-        return "redirect:/add-task.html";
-//        ObjectMapper mapper = new ObjectMapper();
-//        return mapper.writeValueAsString(employee);
+//        return "redirect:/add-task.html";
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(employee);
 //        return employee;
     }
 
     @RequestMapping(value = "/add-task", method = RequestMethod.GET)
-    public @ResponseBody OutputStream addUserTask(HttpServletRequest request, HttpServletResponse response)
+    public @ResponseBody
+    String addUserTask(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
         System.out.println("CCCCCCCCC");
         List<UserTask> myTaskList = userTaskService.listUserTask();
@@ -103,11 +104,13 @@ public class UserTaskController {
          OutputStream out = new ByteArrayOutputStream();
          ObjectMapper mapper = new ObjectMapper();
 
+//        System.out.println(mapper.writeValueAsString(myTaskList.toString()));
+//        return mapper.writeValueAsString(myTaskList.toString());
         mapper.writeValue(out, myTaskList);
 
 //        final byte[] data = out.toByteArray();
         System.out.println(out);
-        return out;
+        return out.toString();
     }
 
 //    @RequestMapping(value = "/add-task", method = RequestMethod.GET)

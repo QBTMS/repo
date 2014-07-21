@@ -9,8 +9,8 @@
          pageEncoding="ISO-8859-1"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!doctype html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,36 +22,121 @@
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="css/anytime.css" />
+    <link rel="stylesheet" href="css/jquery-ui.css">
     <script src="js/jquery.js"></script>
     <script src="js/anytime.js"></script>
+    <script src="js/jquery-ui.js"></script>
 
-    <%--<script type="text/javascript" language="javascript" src="http://www.technicalkeeda.com/js/javascripts/plugin/jquery.js"></script>--%>
+    <%--<link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">--%>
+    <%--<script src="js/jquery-1.10.2.js"></script>--%>
+    <%--<script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>--%>
+
+
+<%--<script type="text/javascript" language="javascript" src="http://www.technicalkeeda.com/js/javascripts/plugin/jquery.js"></script>--%>
     <script type="text/javascript" src="http://www.technicalkeeda.com/js/javascripts/plugin/json2.js"></script>
 
     <!-- Add custom CSS here -->
     <link href="css/modern-business.css" rel="stylesheet">
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        Table.GridOne {
+            padding: 3px;
+            margin: 0;
+            background: lightyellow;
+            border-collapse: collapse;
+            width:35%;
+        }
+        Table.GridOne Td {
+            padding:2px;
+            border: 1px solid #ff9900;
+            border-collapse: collapse;
+        }
+
+        #dvCities { list-style-type: none; margin: 0; padding: 0; width: 80%; height: auto }
+        #dvCities li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.0em; height: 40px; }
+        #dvCities li span { position: absolute; margin-left: -1.3em; }
+    </style>
+    <%--<script>--%>
+
+            <%--$.getJSON( "http://localhost:8080/mvccrud/add-task.html", function( data ) {--%>
+                    <%--var items = [];--%>
+<%--//                $('#result').html(data.getItem("userName").toString);--%>
+<%--//                $('#result').html(data.second);--%>
+<%--//                for (var i = 0; i < data.length; i++){--%>
+<%--//                    $('#result').html(data[i].userName +" "+data[i].userTaskName+" "+data[i].userTaskDiscription+" "+data[i].startedDate+" "+data[i].toBeCompleted+"<br> ");--%>
+<%--//                    $('tasktable').html('<tr><td>' + this.userName + '</td><td>'+this.userTaskDiscription+'</td><td>'+this.startedDate+'</td><td>'+this.toBeCompleted+'</td></tr>');--%>
+<%--//                }--%>
+<%--//                   var items = [];--%>
+                <%--for (var i = 0; i < data.length; i++){--%>
+                    <%--items.push( "<li id='" + data[i].userName + "' " + data[i].userTaskName + " " + data[i].userTaskDescription + "</li>" );--%>
+                <%--}--%>
+
+                <%--$( "<ul/>", {--%>
+                    <%--"class": "my-new-list",--%>
+                    <%--html: items.join( "" )--%>
+                <%--}).appendTo( "body" );--%>
+
+
+            <%--});--%>
+    <%--</script>--%>
 
     <script>
-
-            $.getJSON( "http://localhost:8080/mvccrud/add-task.html", function( data ) {
-                    var items = [];
-                    $.each( data, function( key, val ) {
-                        items.push( "<li id='" + userTaskName + "'>" + userTaskDescription + "</li>" );
-                    });
-
-                    $( "<ul/>", {
-                        "class": "my-new-list",
-                        html: items.join( "" )
-                    }).appendTo( "body" );
+        var listOfTask = [];
+        jQuery.ajax({
+            url: "http://localhost:8080/mvccrud/add-task.html",
+            dataType:'json',
+            success: function (response) {
+                $("#dvCities").append("");
+                $.each(response, function(){
+                    $("#dvCities").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>"+ this.userTaskName + '-' + this.startedDate + '-' + this.toBeCompleted + '-' + this.completenessLevel +"</li>")
                 });
-    </script>
-    <%--Tab script--%>
-    <script>
-        $(function () {
-            $('#myTab li:eq(1) a').tab('show');
+
+                listOfTask = response;
+            }
         });
+
+
+        $(function() {
+            $( "#dvCities" ).sortable();
+            $( "#dvCities" ).disableSelection();
+        });
+
+
+
+    <%--Tab script--%>
+
+        $(function() {
+            $( "#myTab" ).tabs();
+        });
+
+        function madeAjaxCall(){
+            $.ajax({
+                type: "post",
+                url: "addtask.html",
+                cache: false,
+                data:'userTaskName=' + $("#userTaskName").val() + "&userTaskDescription=" + $("#userTaskDescription").val() + "&startedDate=" + $("#startedDate").val() + "&toBeCompleted=" + $("toBeCompleted"),
+                success: function(response){
+                    $('#result').html("");
+                    var obj = JSON.parse(response);
+                    $('#result').html("First Name:- " + obj.userTaskName +"</br>Last Name:- " + obj.userTaskDescription+"</br>Last Name:- " + obj.startedDate);
+                },
+                error: function(){
+                    alert('Error while request..');
+                }
+            });
+        }
+
+        $(function(){
+            $('#result').html("First Name:- " + listOfTask.toString());
+        });
+
+
     </script>
+    <%--<script>--%>
+        <%--$(function () {--%>
+            <%--$('#myTab li:eq(1) a').tab('show');--%>
+        <%--});--%>
+    <%--</script>--%>
 
     <%--<script type="text/javascript">--%>
         <%--function madeAjaxCall(){--%>
@@ -71,40 +156,17 @@
             <%--});--%>
         <%--}--%>
     <%--</script>--%>
-    <style>
-        Table.GridOne {
-            padding: 3px;
-            margin: 0;
-            background: lightyellow;
-            border-collapse: collapse;
-            width:35%;
-        }
-        Table.GridOne Td {
-            padding:2px;
-            border: 1px solid #ff9900;
-            border-collapse: collapse;
-        }
-    </style>
-    <script type="text/javascript">
-        function madeAjaxCall(){
-            $.ajax({
-                type: "post",
-                url: "addtask.html",
-                cache: false,
-                data:'userTaskName=' + $("#userTaskName").val() + "&userTaskDescription=" + $("#userTaskDescription").val() + "&startedDate=" + $("#startedDate").val() + "&toBeCompleted=" + $("toBeCompleted"),
-                success: function(response){
-                    $('#result').html("");
-                    var obj = JSON.parse(response);
-                    $('#result').html("First Name:- " + obj.userTaskName +"</br>Last Name:- " + obj.userTaskDescription+"</br>Last Name:- " + obj.startedDate);
-                },
-                error: function(){
-                    alert('Error while request..');
-                }
-            });
-        }
-    </script>
+
+
 </head>
 <body>
+
+
+
+<div id="pager" class="scroll" style="text-align:center;">
+
+</div>
+
 <%--<form name="employeeForm" method="post">--%>
     <%--<table cellpadding="0" cellspacing="0" border="1" class="GridOne">--%>
         <%--<tr>--%>
@@ -126,7 +188,9 @@
 <%--</form>--%>
 <h1>Spring Framework Jquery Ajax Demo</h1>
 <div id="result"></div>
-
+<%--<h1>Spring Framework Jquery Ajax Demo</h1>--%>
+<%--<div id="result1"></div>--%>
+<%--<table id="tasktable"></table>--%>
 
 
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -177,100 +241,90 @@
 
 
     <%--Tabssssssssssssssss--%>
+<div id="myTab">
 
-    <ul id="myTab" class="nav nav-tabs">
-        <li class="active"><a href="#myTask" data-toggle="tab">
-            My Tasks</a>
-        </li>
-        <li><a href="#myTaskSummary" data-toggle="tab">Task Summary</a></li>
-        <li><a href="#myTaskCharts" data-toggle="tab">Tasks Charts</a></li>
-        <li><a href="#groupTasks" data-toggle="tab">Tickets</a></li>
-        <li><a href="#groupTaskSummary" data-toggle="tab">Tickets Summary</a></li>
-        <li><a href="#groupTaskCharts" data-toggle="tab">Ticket Charts</a></li>
-        <li><a href="#overall" data-toggle="tab">Overall</a></li>
-        <li class="dropdown">
-            <a href="#" id="myTabDrop1" class="dropdown-toggle"
-               data-toggle="dropdown">Java <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="tabContainerDrop1">
-                <li><a href="#jmeter" tabindex="-1" data-toggle="tab">
-                    jmeter</a>
-                </li>
-                <li><a href="#ejb" tabindex="-1" data-toggle="tab">
-                    ejb</a>
-                </li>
-            </ul>
-        </li>
+    <ul>
+        <li><a href="#myTask">My Tasks</a></li>
+        <li><a href="#myTaskSummary">Task Summary</a></li>
+        <li><a href="#myTaskCharts">Tasks Charts</a></li>
+        <li><a href="#groupTasks">Tickets</a></li>
+        <li><a href="#groupTaskSummary">Tickets Summary</a></li>
+        <li><a href="#groupTaskCharts">Ticket Charts</a></li>
+        <li><a href="#overall">Overall</a></li>
     </ul>
-    <div id="myTabContent" class="tab-content">
-        <div class="tab-pane fade in active" id="myTask">
-            <div class="row">
 
-                <div class="col-md-7">
-                    <h1>Task List</h1>
+        <div id="myTask">
+            <%--<div class="row">--%>
+
+                <%--<div class="col-md-7">--%>
+
+                    <h3>Task List</h3>
+                    <ul id="dvCities">
+                    </ul>
                     <%--<c:if test="${!empty myTaskList}">--%>
-                    <table align="left" border="1">
-                        <tr>
-                            <th>Task Title</th>
-                            <th>Started date/time</th>
-                            <th>Target date/time</th>
-                            <th>Edit/Delete</th>
-                            <th>Progres(%)</th>
-                        </tr>
+                    <%--<table align="left" border="1">--%>
+                        <%--<tr>--%>
+                            <%--<th>Task Title</th>--%>
+                            <%--<th>Started date/time</th>--%>
+                            <%--<th>Target date/time</th>--%>
+                            <%--<th>Edit/Delete</th>--%>
+                            <%--<th>Progres(%)</th>--%>
+                        <%--</tr>--%>
 
-                        <c:forEach items="${myTaskList}" var="myTaskList">
-                            <tr>
-                                <td><c:out value="${myTaskList.userTaskName}"/></td>
-                                <td><c:out value="${myTaskList.startedDate}"/></td>
-                                <td><c:out value="${myTaskList.toBeCompleted}"/></td>
-                                <td align="center"><a href="/mvccrud/edit-task.html?userTaskId=${myTaskList.userTaskId}">Edit</a> | <a href="/mvccrud/delete-task.html?userTaskId=${myTaskList.userTaskId}">Delete</a>
-                                <td>
-                                    <select onChange="window.location.href=this.value" name="${myTaskList.completenessLevel}">
-                                        <option value="${myTaskList.completenessLevel}">
-                                                ${myTaskList.completenessLevel}
-                                        </option>
-                                        <option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=10" >
-                                            10%
-                                        </option>
-                                        <option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=20" >
-                                            20%
-                                        </option>
-                                        <option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=30" >
-                                            30%
-                                        </option>
-                                        <option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=40" >
-                                            40%
-                                        </option>
-                                        <option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=50" >
-                                            50%
-                                        </option>
-                                        <option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=60" >
-                                            60%
-                                        </option>
-                                        <option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=70" >
-                                            70%
-                                        </option>
-                                        <option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=80" >
-                                            80%
-                                        </option>
-                                        <option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=90" >
-                                            90%
-                                        </option>
-                                        <option value="/mvccrud/complete-task.html?userTaskId=${myTaskList.userTaskId}" >
-                                            Mark as complete
-                                        </option>
-                                    </select>
+                        <%--<c:forEach items="${myTaskList}" var="myTaskList">--%>
+                            <%--<tr>--%>
+                                <%--<td><c:out value="${myTaskList.userTaskName}"/></td>--%>
+                                <%--<td><c:out value="${myTaskList.startedDate}"/></td>--%>
+                                <%--<td><c:out value="${myTaskList.toBeCompleted}"/></td>--%>
+                                <%--<td align="center"><a href="/mvccrud/edit-task.html?userTaskId=${myTaskList.userTaskId}">Edit</a> | <a href="/mvccrud/delete-task.html?userTaskId=${myTaskList.userTaskId}">Delete</a>--%>
+                                <%--<td>--%>
+                                    <%--<select onChange="window.location.href=this.value" name="${myTaskList.completenessLevel}">--%>
+                                        <%--<option value="${myTaskList.completenessLevel}">--%>
+                                                <%--${myTaskList.completenessLevel}--%>
+                                        <%--</option>--%>
+                                        <%--<option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=10" >--%>
+                                            <%--10%--%>
+                                        <%--</option>--%>
+                                        <%--<option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=20" >--%>
+                                            <%--20%--%>
+                                        <%--</option>--%>
+                                        <%--<option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=30" >--%>
+                                            <%--30%--%>
+                                        <%--</option>--%>
+                                        <%--<option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=40" >--%>
+                                            <%--40%--%>
+                                        <%--</option>--%>
+                                        <%--<option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=50" >--%>
+                                            <%--50%--%>
+                                        <%--</option>--%>
+                                        <%--<option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=60" >--%>
+                                            <%--60%--%>
+                                        <%--</option>--%>
+                                        <%--<option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=70" >--%>
+                                            <%--70%--%>
+                                        <%--</option>--%>
+                                        <%--<option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=80" >--%>
+                                            <%--80%--%>
+                                        <%--</option>--%>
+                                        <%--<option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=90" >--%>
+                                            <%--90%--%>
+                                        <%--</option>--%>
+                                        <%--<option value="/mvccrud/complete-task.html?userTaskId=${myTaskList.userTaskId}" >--%>
+                                            <%--Mark as complete--%>
+                                        <%--</option>--%>
+                                    <%--</select>--%>
 
 
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </table>
+                                <%--</td>--%>
+                            <%--</tr>--%>
+                        <%--</c:forEach>--%>
+                    <%--</table>--%>
 
                     <%--</c:if>--%>
 
 
-                </div>
+                <%--</div>--%>
+                <h3>Add new task</h3>
                 <form name="employeeForm" method="post">
                     <table>
                         <tr>
@@ -345,46 +399,46 @@
                     <%--</form>--%>
                 <%--</div>--%>
 
-            </div>
+            <%--</div>--%>
 
         </div>
-        <div class="tab-pane fade" id="myTaskSummary">
+        <div id="myTaskSummary">
             <p>iOS is a mobile operating system developed and distributed by Apple
                 Inc. Originally released in 2007 for the iPhone, iPod Touch, and
                 Apple TV. iOS is derived from OS X, with which it shares the
                 Darwin foundation. iOS is Apple's mobile version of the
                 OS X operating system used on Apple computers.</p>
         </div>
-        <div class="tab-pane fade" id="myTaskCharts">
+        <div id="myTaskCharts">
             <p>jMeter is an Open Source testing software. It is 100% pure
                 Java application for load and performance testing.</p>
         </div>
-        <div class="tab-pane fade" id="groupTasks">
+        <div id="groupTasks">
             <p>Enterprise Java Beans (EJB) is a development architecture
                 for building highly scalable and robust enterprise level
                 applications to be deployed on J2EE compliant
                 Application Server such as JBOSS, Web Logic etc.
             </p>
         </div>
-        <div class="tab-pane fade" id="groupTaskSummary">
+        <div id="groupTaskSummary">
             <p>jMeter is an Open Source testing software. It is 100% pure
                 Java application for load and performance testing.</p>
         </div>
-        <div class="tab-pane fade" id="groupTaskCharts">
+        <div id="groupTaskCharts">
             <p>Enterprise Java Beans (EJB) is a development architecture
                 for building highly scalable and robust enterprise level
                 applications to be deployed on J2EE compliant
                 Application Server such as JBOSS, Web Logic etc.
             </p>
         </div>
-        <div class="tab-pane fade" id="overall">
+        <div id="overall">
             <p>Enterprise Java Beans (EJB) is a development architecture
                 for building highly scalable and robust enterprise level
                 applications to be deployed on J2EE compliant
                 Application Server such as JBOSS, Web Logic etc.
             </p>
         </div>
-    </div>
+</div>
 
 
 
@@ -413,9 +467,9 @@
 <!-- /.container -->
 
 <!-- JavaScript -->
-<script src="js/jquery-1.10.2.js"></script>
-<script src="js/bootstrap.js"></script>
-<script src="js/modern-business.js"></script>
+<%--<script src="js/jquery-1.10.2.js"></script>--%>
+<%--<script src="js/bootstrap.js"></script>--%>
+<%--<script src="js/modern-business.js"></script>--%>
 
 
 
