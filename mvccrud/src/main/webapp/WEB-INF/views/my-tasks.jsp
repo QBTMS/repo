@@ -83,12 +83,28 @@
     <script>
         var listOfTask = [];
         jQuery.ajax({
-            url: "http://localhost:8080/mvccrud/add-task.html",
+
+            url: "add-task.html",
             dataType:'json',
             success: function (response) {
                 $("#dvCities").append("");
                 $.each(response, function(){
-                    $("#dvCities").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>"+ this.userTaskName + '-' + this.startedDate + '-' + this.toBeCompleted + '-' + this.completenessLevel +"</li>")
+//                    var id = this.userTaskId;
+                    $("#dvCities").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>" +
+                            "<table><tr>" +
+                                "<td width=\"45%\">"
+                                    + this.userTaskName +
+                                '</td>' +
+                                '<td width=\"35%\">'
+                                    + new Date(this.startedDate).toLocaleDateString()+','+new Date(this.startedDate).toLocaleTimeString() +
+                                '</td>' +
+                                '<td width=\"35%\">'
+                                    + new Date(this.toBeCompleted).toLocaleDateString()+','+new Date(this.toBeCompleted).toLocaleTimeString() +
+                                '</td>' +
+                                '<td width=\"10%\">'
+                                    + this.completenessLevel +
+                                "</td>" +
+                            "</tr></table></li>")
                 });
 
                 listOfTask = response;
@@ -116,9 +132,11 @@
                 cache: false,
                 data:'userTaskName=' + $("#userTaskName").val() + "&userTaskDescription=" + $("#userTaskDescription").val() + "&startedDate=" + $("#startedDate").val() + "&toBeCompleted=" + $("toBeCompleted"),
                 success: function(response){
-                    $('#result').html("");
                     var obj = JSON.parse(response);
-                    $('#result').html("First Name:- " + obj.userTaskName +"</br>Last Name:- " + obj.userTaskDescription+"</br>Last Name:- " + obj.startedDate);
+                    $("#dvCities").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>"+ obj.userTaskName + '-' + obj.startedDate + '-' + obj.toBeCompleted + '-' + obj.completenessLevel +"</li>")
+//                    $('#result').html("");
+//                    var obj = JSON.parse(response);
+//                    $('#result').html("First Name:- " + obj.userTaskName +"</br>Last Name:- " + obj.userTaskDescription+"</br>Last Name:- " + obj.startedDate);
                 },
                 error: function(){
                     alert('Error while request..');
@@ -136,7 +154,7 @@
         <%--$(function () {--%>
             <%--$('#myTab li:eq(1) a').tab('show');--%>
         <%--});--%>
-    <%--</script>--%>
+    <%--</script>-- %>
 
     <%--<script type="text/javascript">--%>
         <%--function madeAjaxCall(){--%>
@@ -186,8 +204,8 @@
         <%--</tr>--%>
     <%--</table>--%>
 <%--</form>--%>
-<h1>Spring Framework Jquery Ajax Demo</h1>
-<div id="result"></div>
+<%--<h1>Spring Framework Jquery Ajax Demo</h1>--%>
+<%--<div id="result"></div>--%>
 <%--<h1>Spring Framework Jquery Ajax Demo</h1>--%>
 <%--<div id="result1"></div>--%>
 <%--<table id="tasktable"></table>--%>
@@ -328,11 +346,11 @@
                 <form name="employeeForm" method="post">
                     <table>
                         <tr>
-                            <td>First Name</td>
+                            <td>Title</td>
                             <td><input type="text" name="userTaskName" id="userTaskName" value=""></td>
                         </tr>
                         <tr>
-                            <td>Last Name</td>
+                            <td>Description</td>
                             <td><input type="text" name="userTaskDescription" id="userTaskDescription" value=""></td>
                         </tr>
                         <tr>

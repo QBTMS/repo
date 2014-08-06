@@ -49,9 +49,23 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public User findUserByName(String username) {
-		Criteria criteria = session.getCurrentSession().createCriteria(User.class);
-		criteria.add(Restrictions.eq("username", username));
-		return (User) criteria.uniqueResult();
+        System.out.println("============================="+username);
+        List<User> users = new ArrayList<User>();
+
+        users = session.getCurrentSession().createQuery("from User where username=?")
+                .setParameter(0, username).list();
+
+        if (users.size() > 0) {
+            System.out.println("============================="+users.get(0));
+            return users.get(0);
+        } else {
+            System.out.println("=============================");
+            return null;
+        }
+//		Criteria criteria = session.getCurrentSession().createCriteria(User.class);
+//		criteria.add(Restrictions.eq("username", username));
+//        System.out.println(username+"  "+criteria.uniqueResult());
+//        return (User) criteria.uniqueResult();
 	}
 
 	@Override

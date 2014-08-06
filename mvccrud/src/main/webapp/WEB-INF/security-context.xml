@@ -10,14 +10,16 @@
     
     <http use-expressions="true">
         <intercept-url pattern="/index.html" access="permitAll" />
+        <intercept-url pattern="/login.html" access="permitAll" />
         <intercept-url pattern="/*" access="isAuthenticated()"/> <!-- this means all URL in this app will be checked if user is authenticated -->
-        <form-login /><!-- We will just use the built-in form login page in Spring -->
-               <!-- login-page="/login"
-                default-target-url="/my-tasks"
+        <form-login
+                login-page="/login.html"
+                default-target-url="/my-tasks.html"
                 authentication-failure-url="/login?error"
                 username-parameter="username"
-                password-parameter="password"-->
+                password-parameter="password"/>
         <logout logout-success-url="/index.html"/> <!-- the logout url we will use in JSP -->
+        <!--<csrf />-->
     </http>
 
 
@@ -36,7 +38,7 @@
 
 	<authentication-manager>
 	    <authentication-provider user-service-ref="userDetailsService">
-<!--	        <password-encoder hash="md5"></password-encoder>-->
+	        <!--<password-encoder hash="md5"></password-encoder>-->
 	    </authentication-provider>
 	</authentication-manager>
 </beans:beans>
