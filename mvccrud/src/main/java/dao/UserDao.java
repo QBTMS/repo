@@ -13,4 +13,5 @@ public interface UserDao {
 	User findUserByName(String username);
 	List<User> getAllUsers();
     void updateUserTaskLevel();
+    int getUserId();
 }

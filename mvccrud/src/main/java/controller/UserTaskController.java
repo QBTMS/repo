@@ -72,7 +72,7 @@ public class UserTaskController {
         String toBeCompleted = request.getParameter("toBeCompleted");
 
         Date stdate = new SimpleDateFormat("MMMM dd yyyy kk:mm:ss", Locale.ENGLISH).parse(startedDate);
-        Date cmdate = new SimpleDateFormat("MMMM dd yyyy kk:mm:ss", Locale.ENGLISH).parse(startedDate);
+        Date cmdate = new SimpleDateFormat("MMMM dd yyyy kk:mm:ss", Locale.ENGLISH).parse(toBeCompleted);
 
         employee.setUserTaskName(userTaskName);
         employee.setUserTaskDiscription(userTaskDescription);

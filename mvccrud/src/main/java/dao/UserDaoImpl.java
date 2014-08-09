@@ -7,8 +7,10 @@ import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -76,6 +78,15 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void updateUserTaskLevel() {
 
+    }
+
+    @Override
+    public int getUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().
+                getAuthentication();
+        String ownerName = authentication.getName();
+        User user = findUserByName(ownerName);
+        return user.getId();
     }
 
 }
