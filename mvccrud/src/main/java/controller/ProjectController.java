@@ -54,7 +54,7 @@ public class ProjectController {
         return mapper.writeValueAsString(project);
     }
 
-    @RequestMapping(value = "/add-task", method = RequestMethod.GET)
+    /*@RequestMapping(value = "/add-task", method = RequestMethod.GET)
     public @ResponseBody
     String addUserTask(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
@@ -70,5 +70,5 @@ public class ProjectController {
 //        final byte[] data = out.toByteArray();
         System.out.println(out);
         return out.toString();
-    }
+    }*/
 }

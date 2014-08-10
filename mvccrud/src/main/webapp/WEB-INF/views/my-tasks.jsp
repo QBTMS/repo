@@ -26,6 +26,12 @@
     <script src="js/jquery.js"></script>
     <script src="js/anytime.js"></script>
     <script src="js/jquery-ui.js"></script>
+    <script type="text/javascript" src="jqplot/plugins/jqplot.pieRenderer.min.js"></script>
+    <script type="text/javascript" src="jqplot/plugins/jqplot.donutRenderer.min.js"></script>
+    <link class="include" rel="stylesheet" type="text/css" href="jqplot/jquery.jqplot.min.css" />
+    <link rel="stylesheet" type="text/css" href="jqplot/examples.min.css" />
+    <link type="text/css" rel="stylesheet" href="jqplot/syntaxhighlighter/styles/shCoreDefault.min.css" />
+    <link type="text/css" rel="stylesheet" href="jqplot/syntaxhighlighter/styles/shThemejqPlot.min.css" />
 
     <%--<link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">--%>
     <%--<script src="js/jquery-1.10.2.js"></script>--%>
@@ -52,9 +58,13 @@
             border-collapse: collapse;
         }
 
-        #dvCities { list-style-type: none; margin: 0; padding: 0; width: 80%; height: auto }
-        #dvCities li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.0em; height: 40px; }
-        #dvCities li span { position: absolute; margin-left: -1.3em; }
+        #myTaskList { list-style-type: none; margin: 0; padding: 0; width: 100%; height: auto }
+        #myTaskList li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.0em; height: 40px; width: 100%;}
+        #myTaskList li span { position: absolute; margin-left: -1.3em; }
+
+        #completedTaskList { list-style-type: none; margin: 0; padding: 0; width: 100%; height: auto }
+        #completedTaskList li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.0em; height: 40px; width: 100%; }
+        #completedTaskList li span { position: absolute; margin-left: -1.3em; }
     </style>
     <%--<script>--%>
 
@@ -87,10 +97,10 @@
             url: "add-task.html",
             dataType:'json',
             success: function (response) {
-                $("#dvCities").append("");
+                $("#myTaskList").append("");
                 $.each(response, function(){
 //                    var id = this.userTaskId;
-                    $("#dvCities").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>" +
+                    $("#myTaskList").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>" +
                             "<table><tr>" +
                                 "<td width=\"45%\">"
                                     + this.userTaskName +
@@ -101,10 +111,43 @@
                                 '<td width=\"35%\">'
                                     + new Date(this.toBeCompleted).toLocaleDateString()+','+new Date(this.toBeCompleted).toLocaleTimeString() +
                                 '</td>' +
-                                '<td width=\"10%\">'
-                                    + this.completenessLevel +
-                                "</td>" +
-                            "</tr></table></li>")
+                                '<td width=\"40%\">'+
+                                     '<select onChange=\"window.location.href=this.value\">' +
+                            '<option selected" >' +
+                            +this.completenessLevel+
+                            '</option>'+
+                    '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=10\" >' +
+                           '10%'+
+                            '</option>'+
+                    '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=20\" >' +
+                            '20%' +
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=30\" >' +
+                            '30%'+
+                            '</option>'+
+                    '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=40\" >'+
+                            '40%'+
+                            '</option>'+
+                    '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=50\" >'+
+                            '50%'+
+                            '</option>'+
+                    '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=60\" >'+
+                            '60%'+
+                            '</option>'+
+                    '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=70\" >'+
+                            '70%'+
+                            '</option>'+
+                    '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=80\" >'+
+                            '80%'+
+                            '</option>'+
+                    '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=90\" >'+
+                            '90%'+
+                            '</option>'+
+                    '<option value=\"/mvccrud/complete-task.html?userTaskId='+this.userTaskId+'\" >'+
+                           ' Mark as complete'+
+                    '</option>'+
+                    '</select>' +
+                              '</li>')
                 });
 
                 listOfTask = response;
@@ -113,13 +156,45 @@
 
 
         $(function() {
-            $( "#dvCities" ).sortable();
-            $( "#dvCities" ).disableSelection();
+            $( "#myTaskList" ).sortable();
+            $( "#myTaskList" ).disableSelection();
         });
 
 
+/*
+* List completed tasks
+* */
+        jQuery.ajax({
 
-    <%--Tab script--%>
+            url: "completed-task.html",
+            dataType:'json',
+            success: function (response) {
+                $("#completedTaskList").append("");
+                $.each(response, function(){
+//                    var id = this.userTaskId;
+                    $("#completedTaskList").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>" +
+                            "<table><tr>" +
+                            "<td width=\"45%\">"
+                            + this.userTaskName +
+                            '</td>' +
+                            '<td width=\"35%\">'
+                            + new Date(this.startedDate).toLocaleDateString()+','+new Date(this.startedDate).toLocaleTimeString() +
+                            '</td>' +
+                            '<td width=\"35%\">'
+                            + new Date(this.toBeCompleted).toLocaleDateString()+','+new Date(this.toBeCompleted).toLocaleTimeString() +
+                            '</td>' +
+                            '</li>')
+                });
+
+                listOfTask = response;
+            }
+        });
+
+        /*
+        * End of list completed task list
+        * */
+
+     <%--Tab script--%>
 
         $(function() {
             $( "#myTab" ).tabs();
@@ -133,7 +208,7 @@
                 data:'userTaskName=' + $("#userTaskName").val() + "&userTaskDescription=" + $("#userTaskDescription").val() + "&startedDate=" + $("#startedDate").val() + "&toBeCompleted=" + $("toBeCompleted"),
                 success: function(response){
                     var obj = JSON.parse(response);
-                    $("#dvCities").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>"+ obj.userTaskName + '-' + obj.startedDate + '-' + obj.toBeCompleted + '-' + obj.completenessLevel +"</li>")
+                    $("#myTaskList").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>"+ obj.userTaskName + '-' + obj.startedDate + '-' + obj.toBeCompleted + '-' + obj.completenessLevel +"</li>")
 //                    $('#result').html("");
 //                    var obj = JSON.parse(response);
 //                    $('#result').html("First Name:- " + obj.userTaskName +"</br>Last Name:- " + obj.userTaskDescription+"</br>Last Name:- " + obj.startedDate);
@@ -277,7 +352,7 @@
                 <%--<div class="col-md-7">--%>
 
                     <h3>Task List</h3>
-                    <ul id="dvCities">
+                    <ul id="myTaskList">
                     </ul>
                     <%--<c:if test="${!empty myTaskList}">--%>
                     <%--<table align="left" border="1">--%>
@@ -374,6 +449,10 @@
                         </tr>
                     </table>
                 </form>
+
+                <h3>Completed Task List</h3>
+                <ul id="completedTaskList">
+                </ul>
                 <%--<div class="col-md-5">--%>
                     <%--<h2>Add New Task</h2>--%>
                     <%--<form method="post" >--%>
@@ -426,6 +505,7 @@
                 Apple TV. iOS is derived from OS X, with which it shares the
                 Darwin foundation. iOS is Apple's mobile version of the
                 OS X operating system used on Apple computers.</p>
+
         </div>
         <div id="myTaskCharts">
             <p>jMeter is an Open Source testing software. It is 100% pure

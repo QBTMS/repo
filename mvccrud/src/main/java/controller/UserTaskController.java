@@ -182,7 +182,7 @@ Person employee = new Person();
     public String updateUserTask(@RequestParam("userTaskId") long userTaskId,
                                 @RequestParam("completenessLevel") int completenessLevel){
         userTaskService.update(userTaskId,completenessLevel);
-        return "redirect:/add-task.html";
+        return "redirect:/my-task.html";
     }
 
     @RequestMapping(value = "/complete-task", method = RequestMethod.GET)
@@ -190,7 +190,7 @@ Person employee = new Person();
 
         //System.out.println("############################"+ userTask.getuserName());
         userTask1 = userTaskService.getUserTask(userTaskId);
-        completedUserTask.setuserName(userTask1.getUserName());
+        completedUserTask.setUserName(userTask1.getUserName());
         completedUserTask.setUserTaskName(userTask1.getUserTaskName());
         completedUserTask.setStartedDate(userTask1.getStartedDate());
         completedUserTask.setToBeCompleted(userTask1.getToBeCompleted());
@@ -207,6 +207,23 @@ Person employee = new Person();
 
         completedUserTaskService.addCompletedUserTask(completedUserTask);
         userTaskService.deleteUserTask(userTask1);
-        return "redirect:/add-task.html";
+        return "redirect:/my-task.html";
+    }
+
+    @RequestMapping(value = "/completed-task", method = RequestMethod.GET)
+    public @ResponseBody
+    String listCompletedTask(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        List<CompletedUserTask> completedUserTaskList = completedUserTaskService.listCompletedUserTask();
+        OutputStream out = new ByteArrayOutputStream();
+        ObjectMapper mapper = new ObjectMapper();
+
+//        System.out.println(mapper.writeValueAsString(myTaskList.toString()));
+//        return mapper.writeValueAsString(myTaskList.toString());
+        mapper.writeValue(out, completedUserTaskList);
+
+//        final byte[] data = out.toByteArray();
+        System.out.println(out);
+        return out.toString();
     }
 }
