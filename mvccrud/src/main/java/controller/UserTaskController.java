@@ -1,9 +1,6 @@
 package controller;
 
-import model.CompletedUserTask;
-import model.Person;
-import model.User;
-import model.UserTask;
+import model.*;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.hibernate.SessionFactory;
@@ -70,7 +67,7 @@ public class UserTaskController {
         String userTaskDescription = request.getParameter("userTaskDescription");
         String startedDate = request.getParameter("startedDate");
         String toBeCompleted = request.getParameter("toBeCompleted");
-
+        System.out.println("date============"+startedDate+" "+toBeCompleted);
         Date stdate = new SimpleDateFormat("MMMM dd yyyy kk:mm:ss", Locale.ENGLISH).parse(startedDate);
         Date cmdate = new SimpleDateFormat("MMMM dd yyyy kk:mm:ss", Locale.ENGLISH).parse(toBeCompleted);
 
@@ -221,6 +218,31 @@ Person employee = new Person();
 //        System.out.println(mapper.writeValueAsString(myTaskList.toString()));
 //        return mapper.writeValueAsString(myTaskList.toString());
         mapper.writeValue(out, completedUserTaskList);
+
+//        final byte[] data = out.toByteArray();
+        System.out.println(out);
+        return out.toString();
+    }
+
+    @RequestMapping(value = "/task-count", method = RequestMethod.GET)
+    public @ResponseBody
+    String getAllUserTaskCountController(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        int allCount = userTaskService.getAllUserTaskCount();
+        int completedCount = userTaskService.getCompletedUserTaskCount();
+        int incompleteCount = userTaskService.getIncompleteUserTaskCount();
+
+        IndividualCounts individualCounts = new IndividualCounts();
+        individualCounts.setTasksCreated(allCount);
+        individualCounts.setTasksCompleted(completedCount);
+        individualCounts.setTasksToComplete(incompleteCount);
+        individualCounts.setTaskCompletenessRate(individualCounts.getTaskCompletenessRate());
+        OutputStream out = new ByteArrayOutputStream();
+        ObjectMapper mapper = new ObjectMapper();
+
+//        System.out.println(mapper.writeValueAsString(myTaskList.toString()));
+//        return mapper.writeValueAsString(myTaskList.toString());
+        mapper.writeValue(out, individualCounts);
 
 //        final byte[] data = out.toByteArray();
         System.out.println(out);

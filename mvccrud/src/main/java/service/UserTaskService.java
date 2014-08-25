@@ -19,4 +19,10 @@ public interface UserTaskService {
     public UserTask findById(long userTaskId);
 
     public void update(long userTaskId, int completenessLevel);
+
+    public int getAllUserTaskCount();
+
+    public int getCompletedUserTaskCount();
+
+    public int getIncompleteUserTaskCount();
 }

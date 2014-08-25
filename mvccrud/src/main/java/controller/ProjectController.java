@@ -33,7 +33,7 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
-    @RequestMapping(value = "/add_project",method = RequestMethod.POST)
+    @RequestMapping(value = "/add-project",method = RequestMethod.POST)
     public @ResponseBody
     String addProject(HttpServletRequest request, HttpServletResponse response)
             throws Exception {

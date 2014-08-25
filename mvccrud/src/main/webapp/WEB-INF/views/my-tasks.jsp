@@ -23,15 +23,18 @@
     <link href="css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="css/anytime.css" />
     <link rel="stylesheet" href="css/jquery-ui.css">
+    <link type="text/css" rel="stylesheet" href="css/jquery.multiselect.css" />
     <script src="js/jquery.js"></script>
     <script src="js/anytime.js"></script>
     <script src="js/jquery-ui.js"></script>
+    <script src="js/jquery.multiselect.js"></script>
     <script type="text/javascript" src="jqplot/plugins/jqplot.pieRenderer.min.js"></script>
     <script type="text/javascript" src="jqplot/plugins/jqplot.donutRenderer.min.js"></script>
     <link class="include" rel="stylesheet" type="text/css" href="jqplot/jquery.jqplot.min.css" />
     <link rel="stylesheet" type="text/css" href="jqplot/examples.min.css" />
     <link type="text/css" rel="stylesheet" href="jqplot/syntaxhighlighter/styles/shCoreDefault.min.css" />
     <link type="text/css" rel="stylesheet" href="jqplot/syntaxhighlighter/styles/shThemejqPlot.min.css" />
+
 
     <%--<link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">--%>
     <%--<script src="js/jquery-1.10.2.js"></script>--%>
@@ -160,7 +163,19 @@
             $( "#myTaskList" ).disableSelection();
         });
 
+        /*
+        *
+        * Do empty div
+        *
+        * */
 
+        function doEmpty(){
+            $('#myTaskList').empty();
+        }
+
+        /*
+        * End of do empty div
+        * */
 /*
 * List completed tasks
 * */
@@ -183,6 +198,42 @@
                             '<td width=\"35%\">'
                             + new Date(this.toBeCompleted).toLocaleDateString()+','+new Date(this.toBeCompleted).toLocaleTimeString() +
                             '</td>' +
+                            '<td width=\"40%\">'+
+                            '<select onChange=\"window.location.href=this.value\">' +
+                            '<option selected" >' +
+                            +this.completenessLevel+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=10\" >' +
+                            '10%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=20\" >' +
+                            '20%' +
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=30\" >' +
+                            '30%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=40\" >'+
+                            '40%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=50\" >'+
+                            '50%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=60\" >'+
+                            '60%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=70\" >'+
+                            '70%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=80\" >'+
+                            '80%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=90\" >'+
+                            '90%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/complete-task.html?userTaskId='+this.userTaskId+'\" >'+
+                            ' Mark as complete'+
+                            '</option>'+
+                            '</select>' +
                             '</li>')
                 });
 
@@ -205,13 +256,57 @@
                 type: "post",
                 url: "addtask.html",
                 cache: false,
-                data:'userTaskName=' + $("#userTaskName").val() + "&userTaskDescription=" + $("#userTaskDescription").val() + "&startedDate=" + $("#startedDate").val() + "&toBeCompleted=" + $("toBeCompleted"),
+                data:'userTaskName=' + $("#userTaskName").val() + "&userTaskDescription=" + $("#userTaskDescription").val() + "&startedDate=" + $("#startedDate").val() + "&toBeCompleted=" + $("#toBeCompleted").val(),
                 success: function(response){
                     var obj = JSON.parse(response);
-                    $("#myTaskList").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>"+ obj.userTaskName + '-' + obj.startedDate + '-' + obj.toBeCompleted + '-' + obj.completenessLevel +"</li>")
-//                    $('#result').html("");
-//                    var obj = JSON.parse(response);
-//                    $('#result').html("First Name:- " + obj.userTaskName +"</br>Last Name:- " + obj.userTaskDescription+"</br>Last Name:- " + obj.startedDate);
+                    $("#myTaskList").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>" +
+                            "<table><tr>" +
+                            "<td width=\"45%\">"
+                            + this.userTaskName +
+                            '</td>' +
+                            '<td width=\"35%\">'
+                            + new Date(this.startedDate).toLocaleDateString()+','+new Date(this.startedDate).toLocaleTimeString() +
+                            '</td>' +
+                            '<td width=\"35%\">'
+                            + new Date(this.toBeCompleted).toLocaleDateString()+','+new Date(this.toBeCompleted).toLocaleTimeString() +
+                            '</td>' +
+                            '<td width=\"40%\">'+
+                            '<select onChange=\"window.location.href=this.value\">' +
+                            '<option selected" >' +
+                            +this.completenessLevel+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=10\" >' +
+                            '10%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=20\" >' +
+                            '20%' +
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=30\" >' +
+                            '30%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=40\" >'+
+                            '40%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=50\" >'+
+                            '50%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=60\" >'+
+                            '60%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=70\" >'+
+                            '70%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=80\" >'+
+                            '80%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=90\" >'+
+                            '90%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/complete-task.html?userTaskId='+this.userTaskId+'\" >'+
+                            ' Mark as complete'+
+                            '</option>'+
+                            '</select>' +
+                            '</li>')
                 },
                 error: function(){
                     alert('Error while request..');
@@ -223,6 +318,52 @@
             $('#result').html("First Name:- " + listOfTask.toString());
         });
 
+    /*
+    * Summary individual
+    * */
+        jQuery.ajax({
+
+            url: "task-count.html",
+            dataType:'json',
+            success: function (response) {
+                $("#indCount").append("");
+                    $("#indCount").append("<li >" +
+                           "<p>Tasks created: " +
+                            + response.tasksCreated +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
+                            "Tasks Completed: " +
+                            + response.tasksCompleted +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
+                            "Tasks to complete: " +
+                            + response.tasksToComplete +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
+                            "Task completeness rate: " +
+                            + (response.tasksCompleted / response.tasksCreated) * 100 + "%" +
+                            '</p>'+
+                            '</li>')
+            }
+        });
+
+
+        /*
+        * End of summary individual
+        * */
+
+/*
+* List all users
+* */
+
+        jQuery.ajax({
+            url: "list-users.html",
+            dataType:'json',
+            success: function (response) {
+                $("#tttt").append("");
+                   
+            }
+        });
+
+
+
+         $(document).ready(function(){
+            $("#asignees").multiselect();
+        });
 
     </script>
     <%--<script>--%>
@@ -253,7 +394,9 @@
 
 </head>
 <body>
+<div id="tttt">
 
+</div>
 
 
 <div id="pager" class="scroll" style="text-align:center;">
@@ -437,7 +580,7 @@
                             { format: "%M %d %Y %T", firstDOW: 1 } );
                             </script>
                         <tr>
-                            <td>Target dat/time</td>
+                            <td>Target date/time</td>
                             <td><input type="text" name="toBeCompleted" id="toBeCompleted"></td>
                         </tr>
                         <script>
@@ -499,25 +642,68 @@
             <%--</div>--%>
 
         </div>
+
+
         <div id="myTaskSummary">
-            <p>iOS is a mobile operating system developed and distributed by Apple
-                Inc. Originally released in 2007 for the iPhone, iPod Touch, and
-                Apple TV. iOS is derived from OS X, with which it shares the
-                Darwin foundation. iOS is Apple's mobile version of the
-                OS X operating system used on Apple computers.</p>
+            <ul id="indCount">
+
+            </ul>
 
         </div>
+
+
         <div id="myTaskCharts">
             <p>jMeter is an Open Source testing software. It is 100% pure
                 Java application for load and performance testing.</p>
         </div>
+
+
         <div id="groupTasks">
-            <p>Enterprise Java Beans (EJB) is a development architecture
-                for building highly scalable and robust enterprise level
-                applications to be deployed on J2EE compliant
-                Application Server such as JBOSS, Web Logic etc.
-            </p>
+            <h3>Add new project</h3>
+            <form name="employeeForm" method="post">
+                <table>
+                    <tr>
+                        <td>Project Title</td>
+                        <td><input type="text" name="projrctName" id="projrctName" value=""></td>
+                    </tr>
+                    <tr>
+                        <td>Description</td>
+                        <td><input type="text" name="projrctDescription" id="projrctDescription" value=""></td>
+                    </tr>
+                    <tr>
+                        <td>Project Started date/time</td>
+                        <td><input type="text" name="projrctstartedDate" id="projrctstartedDate" ></td>
+                    </tr>
+                    <script>
+                        AnyTime.picker( "projrctstartedDate",
+                                { format: "%M %d %Y %T", firstDOW: 1 } );
+                    </script>
+                    <tr>
+                        <td>Target date/time</td>
+                        <td><input type="text" name="projrcttoBeCompleted" id="projrcttoBeCompleted"></td>
+                    </tr>
+                    <script>
+                        AnyTime.picker( "projrcttoBeCompleted",
+                                { format: "%M %d %Y %T", firstDOW: 1 } );
+                    </script>
+
+                    <tr>
+                        <td></td>
+                        <td><select id="asignees" name="asignees" multiple="multiple">
+
+                        </select>
+                        </td>
+                    </tr>
+                    <tr>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center"><input type="button" value="Submit" onclick="madeAjaxCall();"></td>
+                    </tr>
+                </table>
+            </form>
         </div>
+
+
         <div id="groupTaskSummary">
             <p>jMeter is an Open Source testing software. It is 100% pure
                 Java application for load and performance testing.</p>

@@ -2,6 +2,7 @@ package dao;
 
 import model.User;
 import model.User;
+import model.Users;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface UserDao {
 	void deleteUser(int userId);
 	User findUser(int userId);
 	User findUserByName(String username);
-	List<User> getAllUsers();
+	List<Users> getAllUsers();
     void updateUserTaskLevel();
     int getUserId();
 }

@@ -3,6 +3,7 @@ package dao;
 import model.Role;
 import model.User;
 import model.UserStatus;
+import model.Users;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -71,8 +72,8 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public List<User> getAllUsers() {
-		return session.getCurrentSession().createQuery("from user").list();
+	public List<Users> getAllUsers() {
+		return session.getCurrentSession().createQuery("select id,username from model.User").list();
 	}
 
     @Override

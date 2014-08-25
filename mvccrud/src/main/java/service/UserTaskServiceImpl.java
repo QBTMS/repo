@@ -53,4 +53,19 @@ public class UserTaskServiceImpl implements UserTaskService{
     public void update(long userTaskId, int completenessLevel) {
         userTaskDao.update(userTaskId,completenessLevel);
     }
+
+    @Override
+    public int getAllUserTaskCount() {
+        return userTaskDao.getAllUserTaskCount();
+    }
+
+    @Override
+    public int getCompletedUserTaskCount() {
+        return userTaskDao.getCompletedUserTaskCount();
+    }
+
+    @Override
+    public int getIncompleteUserTaskCount() {
+        return userTaskDao.getIncompleteUserTaskCount();
+    }
 }
