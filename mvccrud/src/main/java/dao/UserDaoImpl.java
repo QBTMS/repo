@@ -6,7 +6,9 @@ import model.UserStatus;
 import model.Users;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -72,8 +74,15 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public List<Users> getAllUsers() {
-		return session.getCurrentSession().createQuery("select id,username from model.User").list();
+	public List<User> getAllUsers() {
+        Criteria cr = session.getCurrentSession().createCriteria(User.class)
+                .setProjection(Projections.projectionList()
+                        .add(Projections.property("id"), "id")
+                        .add(Projections.property("username"), "username"))
+                .setResultTransformer(Transformers.aliasToBean(User.class));
+
+        List<User> list = cr.list();
+		return list;
 	}
 
     @Override

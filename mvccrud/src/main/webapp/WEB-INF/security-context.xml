@@ -11,6 +11,7 @@
     <http use-expressions="true">
         <intercept-url pattern="/index.html" access="permitAll" />
         <intercept-url pattern="/login.html" access="permitAll" />
+        <intercept-url pattern="/create-account.html" access="permitAll" />
         <intercept-url pattern="/*" access="isAuthenticated()"/> <!-- this means all URL in this app will be checked if user is authenticated -->
         <form-login
                 login-page="/login.html"

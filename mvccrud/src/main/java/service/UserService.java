@@ -14,7 +14,7 @@ public interface UserService {
     void deleteUser(int userId);
     User findUser(int userId);
     User findUserByName(String username);
-    List<Users> getAllUsers();
+    List<User> getAllUsers();
     void updateUserTaskLevel();
     int getUserId();
 }

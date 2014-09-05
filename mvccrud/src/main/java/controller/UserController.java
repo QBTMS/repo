@@ -1,10 +1,7 @@
 package controller;
 
 import dao.UserDao;
-import model.Role;
-import model.User;
-import model.UserStatus;
-import model.Users;
+import model.*;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import service.UserDetailsServiceImpl;
 import service.UserService;
+import service.UsersAndRolesService;
+import service.UsersService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,6 +31,12 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UsersService usersService;
+
+    @Autowired
+    private UsersAndRolesService usersAndRolesService;
 
 
     User user = new User();
@@ -56,7 +61,7 @@ public class UserController {
     @RequestMapping(value = "/list-users", method = RequestMethod.GET)
     public String listAllUsers(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-        List<Users> usersList = userService.getAllUsers();
+        List<User> usersList = userService.getAllUsers();
         OutputStream out = new ByteArrayOutputStream();
         ObjectMapper mapper = new ObjectMapper();
 
@@ -65,9 +70,33 @@ public class UserController {
         mapper.writeValue(out, usersList);
 
 //        final byte[] data = out.toByteArray();
-        System.out.println("=========================================="+out.toString());
+        System.out.println("\n\n=========================================="+out.toString()+"\n\n");
         return out.toString();
     }
+
+    @RequestMapping(value = "/create-account", method = RequestMethod.POST)
+    public String createAccount(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        System.out.println("\n\n=========================================="+name+"-"+email+"-"+password+"\n\n");
+        Users users = new Users();
+        users.setName(name);
+        users.setUsername(email);
+        users.setPassword(password);
+        users.setStatus("ACTIVE");
+        usersService.addusres(users);
+        List<Users> usersList = usersService.getUsers(email);
+        System.out.println("\n\n=========================================="+usersList.get(0).getName()+"-"+usersList.get(0).getUsername()+"-"+usersList.get(0).getPassword()+"-"+usersList.get(0).getId()+"\n\n");
+        UsersAndRoles usersAndRoles = new UsersAndRoles();
+        usersAndRoles.setRole_id(1);
+        usersAndRoles.setUser_id(usersList.get(0).getId());
+//        usersAndRoles.setId(usersList.get(0).getId());
+        usersAndRolesService.addRoles(usersAndRoles);
+        return "redirect:/my-task.html";
+    }
+
 
 }
 

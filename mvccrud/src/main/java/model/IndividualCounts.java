@@ -35,6 +35,7 @@ public class IndividualCounts {
 
     public float getTaskCompletenessRate() {
         return (tasksCompleted / tasksCreated) * 100;
+
     }
 
     public void setTaskCompletenessRate(float taskCompletenessRate) {

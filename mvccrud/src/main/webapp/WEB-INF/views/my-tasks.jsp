@@ -342,9 +342,10 @@
         });
 
 
+
         /*
-        * End of summary individual
-        * */
+         * End of summary individual
+         */
 
 /*
 * List all users
@@ -355,7 +356,7 @@
             dataType:'json',
             success: function (response) {
                 $("#tttt").append("");
-                   
+
             }
         });
 
