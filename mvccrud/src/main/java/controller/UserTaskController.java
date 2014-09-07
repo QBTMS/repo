@@ -75,6 +75,7 @@ public class UserTaskController {
         employee.setUserTaskDiscription(userTaskDescription);
         employee.setStartedDate(stdate);
         employee.setToBeCompleted(cmdate);
+        employee.setCompletenessLevel(0);
         Authentication authentication = SecurityContextHolder.getContext().
                 getAuthentication();
         String name = authentication.getName();
@@ -83,11 +84,15 @@ public class UserTaskController {
 
         System.out.println(employee.getUserTaskName());
         System.out.println(employee.getUserTaskDiscription());
+        System.out.println(employee.getStartedDate());
+        System.out.println(employee.getCompletedDate());
 //        System.out.println(employee.getLastName());
-
+        OutputStream out = new ByteArrayOutputStream();
 //        return "redirect:/add-task.html";
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(employee);
+        mapper.writeValue(out,employee);
+        System.out.println(out.toString());
+        return out.toString();
 //        return employee;
     }
 
@@ -192,7 +197,6 @@ Person employee = new Person();
         completedUserTask.setStartedDate(userTask1.getStartedDate());
         completedUserTask.setToBeCompleted(userTask1.getToBeCompleted());
         completedUserTask.setUserTaskDiscription(userTask1.getUserTaskDiscription());
-        completedUserTask.setCompletenessLevel(100);
 
         //DateFormat dateFormat;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
@@ -204,6 +208,25 @@ Person employee = new Person();
 
         completedUserTaskService.addCompletedUserTask(completedUserTask);
         userTaskService.deleteUserTask(userTask1);
+        return "redirect:/my-task.html";
+    }
+
+    @RequestMapping(value = "/notcomplete-task", method = RequestMethod.GET)
+    public String notComplete(@RequestParam("userTaskId") long userTaskId) throws ParseException {
+        CompletedUserTask completedUserTask1 = new CompletedUserTask();
+        UserTask userTask2 = new UserTask();
+        //System.out.println("############################"+ userTask.getuserName());
+        completedUserTask1 = completedUserTaskService.findById(userTaskId);
+        userTask2.setUserName(completedUserTask1.getUserName());
+        userTask2.setUserTaskName(completedUserTask1.getUserTaskName());
+        userTask2.setStartedDate(completedUserTask1.getStartedDate());
+        userTask2.setToBeCompleted(completedUserTask1.getToBeCompleted());
+        userTask2.setUserTaskDiscription(completedUserTask1.getUserTaskDiscription());
+        userTask2.setCompletenessLevel(completedUserTask1.getCompletenessLevel());
+
+
+        userTaskService.addUserTask(userTask2);
+        completedUserTaskService.deleteCompletedUserTask(completedUserTask1);
         return "redirect:/my-task.html";
     }
 

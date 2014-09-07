@@ -1,6 +1,8 @@
 package dao;
 
 import model.CompletedUserTask;
+import model.UserTask;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -42,12 +44,20 @@ public class CompletedUserTaskDaoImpl implements CompletedUserTaskDao {
 
     @Override
     public void deleteCompletedUserTask(CompletedUserTask completedUserTask) {
-
+        String hql = "DELETE FROM model.CompletedUserTask WHERE userTaskId = :userTaskId";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("userTaskId", completedUserTask.getUserTaskId());
+        query.executeUpdate();
     }
 
     @Override
     public CompletedUserTask findById(long completedUserTaskId) {
-        return null;
+        String hql = "from model.CompletedUserTask where userTaskid = :userTaskid";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("userTaskid", completedUserTaskId);
+        CompletedUserTask completedUserTask =  (CompletedUserTask) query.uniqueResult();
+
+        return completedUserTask;
     }
 }
 //

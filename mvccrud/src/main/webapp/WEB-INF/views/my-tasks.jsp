@@ -192,48 +192,14 @@
                             "<td width=\"45%\">"
                             + this.userTaskName +
                             '</td>' +
-                            '<td width=\"35%\">'
+                            '<td width=\"20%\">'
                             + new Date(this.startedDate).toLocaleDateString()+','+new Date(this.startedDate).toLocaleTimeString() +
                             '</td>' +
-                            '<td width=\"35%\">'
+                            '<td width=\"20%\">'
                             + new Date(this.toBeCompleted).toLocaleDateString()+','+new Date(this.toBeCompleted).toLocaleTimeString() +
                             '</td>' +
                             '<td width=\"40%\">'+
-                            '<select onChange=\"window.location.href=this.value\">' +
-                            '<option selected" >' +
-                            +this.completenessLevel+
-                            '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=10\" >' +
-                            '10%'+
-                            '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=20\" >' +
-                            '20%' +
-                            '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=30\" >' +
-                            '30%'+
-                            '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=40\" >'+
-                            '40%'+
-                            '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=50\" >'+
-                            '50%'+
-                            '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=60\" >'+
-                            '60%'+
-                            '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=70\" >'+
-                            '70%'+
-                            '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=80\" >'+
-                            '80%'+
-                            '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=90\" >'+
-                            '90%'+
-                            '</option>'+
-                            '<option value=\"/mvccrud/complete-task.html?userTaskId='+this.userTaskId+'\" >'+
-                            ' Mark as complete'+
-                            '</option>'+
-                            '</select>' +
+                            '<a href="/mvccrud/notcomplete-task.html?userTaskId='+this.userTaskId+'" >Mark as incomplete </a> '+
                             '</li>')
                 });
 
@@ -262,47 +228,47 @@
                     $("#myTaskList").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>" +
                             "<table><tr>" +
                             "<td width=\"45%\">"
-                            + this.userTaskName +
+                            + obj.userTaskName +
                             '</td>' +
                             '<td width=\"35%\">'
-                            + new Date(this.startedDate).toLocaleDateString()+','+new Date(this.startedDate).toLocaleTimeString() +
+                            + new Date(obj.startedDate).toLocaleDateString()+','+new Date(obj.startedDate).toLocaleTimeString() +
                             '</td>' +
                             '<td width=\"35%\">'
-                            + new Date(this.toBeCompleted).toLocaleDateString()+','+new Date(this.toBeCompleted).toLocaleTimeString() +
+                            + new Date(obj.toBeCompleted).toLocaleDateString()+','+new Date(obj.toBeCompleted).toLocaleTimeString() +
                             '</td>' +
                             '<td width=\"40%\">'+
-                            '<select onChange=\"window.location.href=this.value\">' +
+                            '<select onChange=\"window.location.href=obj.value\">' +
                             '<option selected" >' +
-                            +this.completenessLevel+
+                            +obj.completenessLevel+
                             '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=10\" >' +
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.userTaskId+'&completenessLevel=10\" >' +
                             '10%'+
                             '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=20\" >' +
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.userTaskId+'&completenessLevel=20\" >' +
                             '20%' +
                             '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=30\" >' +
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.userTaskId+'&completenessLevel=30\" >' +
                             '30%'+
                             '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=40\" >'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.userTaskId+'&completenessLevel=40\" >'+
                             '40%'+
                             '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=50\" >'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.userTaskId+'&completenessLevel=50\" >'+
                             '50%'+
                             '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=60\" >'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.userTaskId+'&completenessLevel=60\" >'+
                             '60%'+
                             '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=70\" >'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.userTaskId+'&completenessLevel=70\" >'+
                             '70%'+
                             '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=80\" >'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.userTaskId+'&completenessLevel=80\" >'+
                             '80%'+
                             '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+this.userTaskId+'&completenessLevel=90\" >'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.userTaskId+'&completenessLevel=90\" >'+
                             '90%'+
                             '</option>'+
-                            '<option value=\"/mvccrud/complete-task.html?userTaskId='+this.userTaskId+'\" >'+
+                            '<option value=\"/mvccrud/complete-task.html?userTaskId='+obj.userTaskId+'\" >'+
                             ' Mark as complete'+
                             '</option>'+
                             '</select>' +

@@ -37,11 +37,11 @@ public class CompletedUserTaskServiceImpl implements CompletedUserTaskService {
 
     @Override
     public void deleteCompletedUserTask(CompletedUserTask completedUserTask) {
-
+        completedUserTaskDao.deleteCompletedUserTask(completedUserTask);
     }
 
     @Override
     public CompletedUserTask findById(long completedUserTaskId) {
-        return null;
+        return completedUserTaskDao.findById(completedUserTaskId);
     }
 }
