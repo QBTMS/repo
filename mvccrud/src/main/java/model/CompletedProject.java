@@ -4,11 +4,11 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * Created by prasad on 8/7/14.
+ * Created by prasad on 9/16/14.
  */
 @Entity
-@Table(name = "project")
-public class Project {
+@Table(name = "completedProject")
+public class CompletedProject {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name = "projectId")
@@ -41,10 +41,10 @@ public class Project {
     @Column(name = "priority")
     private int priority;
 
-    public Project() {
+    public CompletedProject() {
     }
 
-    public Project(Long owner, String projectName, String projectDiscription, Date startedDate, Date toBeCompleted, Date completedDate, int completenessLevel, int priority) {
+    public CompletedProject(Long owner, String projectName, String projectDiscription, Date startedDate, Date toBeCompleted, Date completedDate, int completenessLevel, int priority) {
         this.owner = owner;
         this.projectName = projectName;
         this.projectDiscription = projectDiscription;

@@ -2,6 +2,7 @@ package dao;
 
 import model.Project;
 import model.User;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -16,6 +17,7 @@ import java.util.List;
 @Repository("projectDao")
 public class ProjectDaoImpl implements ProjectDao {
 
+    @Autowired
     private UserDao userDao;
 
     @Autowired
@@ -23,6 +25,8 @@ public class ProjectDaoImpl implements ProjectDao {
 
     @Override
     public void addProject(Project project) {
+        int ownerId = userDao.getUserId();
+        project.setOwner(Long.parseLong(String.valueOf(ownerId)));
             sessionFactory.getCurrentSession().saveOrUpdate(project);
     }
 
@@ -39,21 +43,34 @@ public class ProjectDaoImpl implements ProjectDao {
 
     @Override
     public Project getProject(long projectId) {
-        return null;
+        return (Project) sessionFactory.getCurrentSession().get(Project.class, projectId);
     }
 
     @Override
     public void deleteProject(Project project) {
-
+        String hql = "DELETE FROM model.Project WHERE projectId = :projectId";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("projectId", project.getProjectId());
+        query.executeUpdate();
     }
 
     @Override
     public Project findById(long projectId) {
-        return null;
+        String hql = "from Project where projectId = :projectId";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("projectId", projectId);
+        Project project =  (Project) query.uniqueResult();
+
+        return project;
     }
 
     @Override
     public void update(long projectId, int completenessLevel) {
-
+        String hql = "update model.Project set completenessLevel= :completenessLevel" +
+                " where projectId = :projectId";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("projectId", projectId);
+        query.setParameter("completenessLevel", completenessLevel);
+        query.executeUpdate();
     }
 }

@@ -4,24 +4,27 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * Created by prasad on 8/7/14.
+ * Created by prasad on 9/8/14.
  */
 @Entity
-@Table(name = "project")
-public class Project {
+@Table(name = "projectTasks")
+public class ProjectTasks {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    @Column(name = "projectId")
-    private Long projectId;
+    @Column(name = "projectTaskId")
+    private Long projectTaskId;
 
-    @Column(name = "owner")
-    private Long owner;
+    @Column(name = "project_id")
+    private Long project_id;
 
-    @Column(name = "projectName")
-    private String projectName;
+    @Column(name = "asignee")
+    private int asignee;
 
-    @Column(name = "projectDiscription")
-    private String projectDiscription;
+    @Column(name = "projectTaskName")
+    private String projectTaskName;
+
+    @Column(name = "projectTaskDiscription")
+    private String projectTaskDiscription;
 
     @Column(name = "startedDate", columnDefinition="DATETIME")
     @Temporal(TemporalType.TIMESTAMP)
@@ -41,13 +44,14 @@ public class Project {
     @Column(name = "priority")
     private int priority;
 
-    public Project() {
+    public ProjectTasks() {
     }
 
-    public Project(Long owner, String projectName, String projectDiscription, Date startedDate, Date toBeCompleted, Date completedDate, int completenessLevel, int priority) {
-        this.owner = owner;
-        this.projectName = projectName;
-        this.projectDiscription = projectDiscription;
+    public ProjectTasks(Long project_id, int asignee, String projectTaskName, String projectTaskDiscription, Date startedDate, Date toBeCompleted, Date completedDate, int completenessLevel, int priority) {
+        this.project_id = project_id;
+        this.asignee = asignee;
+        this.projectTaskName = projectTaskName;
+        this.projectTaskDiscription = projectTaskDiscription;
         this.startedDate = startedDate;
         this.toBeCompleted = toBeCompleted;
         this.completedDate = completedDate;
@@ -55,36 +59,44 @@ public class Project {
         this.priority = priority;
     }
 
-    public Long getProjectId() {
-        return projectId;
+    public Long getProjectTaskId() {
+        return projectTaskId;
     }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
+    public void setProjectTaskId(Long projectTaskId) {
+        this.projectTaskId = projectTaskId;
     }
 
-    public Long getOwner() {
-        return owner;
+    public Long getProject_id() {
+        return project_id;
     }
 
-    public void setOwner(Long owner) {
-        this.owner = owner;
+    public void setProject_id(Long project_id) {
+        this.project_id = project_id;
     }
 
-    public String getProjectName() {
-        return projectName;
+    public int getAsignee() {
+        return asignee;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
+    public void setAsignee(int asignee) {
+        this.asignee = asignee;
     }
 
-    public String getProjectDiscription() {
-        return projectDiscription;
+    public String getProjectTaskName() {
+        return projectTaskName;
     }
 
-    public void setProjectDiscription(String projecDiscription) {
-        this.projectDiscription = projectDiscription;
+    public void setProjectTaskName(String projectTaskName) {
+        this.projectTaskName = projectTaskName;
+    }
+
+    public String getProjectTaskDiscription() {
+        return projectTaskDiscription;
+    }
+
+    public void setProjectTaskDiscription(String projectTaskDiscription) {
+        this.projectTaskDiscription = projectTaskDiscription;
     }
 
     public Date getStartedDate() {

@@ -100,7 +100,6 @@ public class UserTaskController {
     public @ResponseBody
     String addUserTask(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-        System.out.println("CCCCCCCCC");
         List<UserTask> myTaskList = userTaskService.listUserTask();
         List<CompletedUserTask> completedUserTaskList = completedUserTaskService.listCompletedUserTask();
          OutputStream out = new ByteArrayOutputStream();
@@ -174,10 +173,12 @@ Person employee = new Person();
         return new ModelAndView("my-tasks", model);
     }
 
-    @RequestMapping(value = "/delete-task", method = RequestMethod.GET)
-    public String deleteUserTask(@ModelAttribute("command")UserTask userTask) {
-        userTaskService.deleteUserTask(userTask);
-        return "redirect:/add-task.html";
+    @RequestMapping(value = "/delete-completed-task", method = RequestMethod.GET)
+    public String deleteUserTask(@RequestParam("userTaskId") long userTaskId) throws ParseException {
+        CompletedUserTask completedUserTaskd = new CompletedUserTask();
+        completedUserTaskd = completedUserTaskService.findById(userTaskId);
+        completedUserTaskService.deleteCompletedUserTask(completedUserTaskd);
+        return "redirect:/my-task.html";
     }
 
     @RequestMapping(value = "/update-task", method = RequestMethod.GET)

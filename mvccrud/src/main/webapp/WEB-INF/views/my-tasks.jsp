@@ -57,7 +57,7 @@
         }
         Table.GridOne Td {
             padding:2px;
-            border: 1px solid #ff9900;
+            border: 1px solid #1d02ff;
             border-collapse: collapse;
         }
 
@@ -68,6 +68,14 @@
         #completedTaskList { list-style-type: none; margin: 0; padding: 0; width: 100%; height: auto }
         #completedTaskList li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.0em; height: 40px; width: 100%; }
         #completedTaskList li span { position: absolute; margin-left: -1.3em; }
+
+        #myProjects { list-style-type: none; margin: 0; padding: 0; width: 100%; height: auto }
+        #myProjects li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.0em; height: 40px; width: 100%;}
+        #myProjects li span { position: absolute; margin-left: -1.3em; }
+
+        #completedProjects { list-style-type: none; margin: 0; padding: 0; width: 100%; height: auto }
+        #completedProjects li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.0em; height: 40px; width: 100%; }
+        #completedProjects li span { position: absolute; margin-left: -1.3em; }
     </style>
     <%--<script>--%>
 
@@ -163,6 +171,11 @@
             $( "#myTaskList" ).disableSelection();
         });
 
+        $(function() {
+            $( "#myProjects" ).sortable();
+            $( "#myProjects" ).disableSelection();
+        });
+
         /*
         *
         * Do empty div
@@ -189,17 +202,18 @@
 //                    var id = this.userTaskId;
                     $("#completedTaskList").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>" +
                             "<table><tr>" +
-                            "<td width=\"45%\">"
+                            "<td width=\"30%\">"
                             + this.userTaskName +
                             '</td>' +
-                            '<td width=\"20%\">'
-                            + new Date(this.startedDate).toLocaleDateString()+','+new Date(this.startedDate).toLocaleTimeString() +
-                            '</td>' +
-                            '<td width=\"20%\">'
-                            + new Date(this.toBeCompleted).toLocaleDateString()+','+new Date(this.toBeCompleted).toLocaleTimeString() +
+                            '<td width=\"30%\">'
+                            + new Date(this.completedDate).toLocaleDateString()+','+new Date(this.startedDate).toLocaleTimeString() +
                             '</td>' +
                             '<td width=\"40%\">'+
                             '<a href="/mvccrud/notcomplete-task.html?userTaskId='+this.userTaskId+'" >Mark as incomplete </a> '+
+                            '</td>' +
+                            '<td width=\"20%\">'+
+                            '<a href="/mvccrud/delete-completed-task.html?userTaskId='+this.userTaskId+'" >Delete </a> '+
+                            '</td>' +
                             '</li>')
                 });
 
@@ -284,6 +298,180 @@
             $('#result').html("First Name:- " + listOfTask.toString());
         });
 
+        /*
+        * Add new project
+        * */
+        function addProjectAjax(){
+            $.ajax({
+                type: "post",
+                url: "add-project.html",
+                cache: false,
+                data:'projectName=' + $("#projectName").val() + "&projectDescription=" + $("#projectDescription").val() + "&startedDate=" + $("#projectStartedDate").val() + "&toBeCompleted=" + $("#projectToBeCompleted").val(),
+                success: function(response){
+                    var obj = JSON.parse(response);
+                    $("#myProjects").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>" +
+                            "<table><tr>" +
+                            "<td width=\"45%\">"
+                            + obj.projectName +
+                            '</td>' +
+                            '<td width=\"35%\">'
+                            + new Date(obj.startedDate).toLocaleDateString()+','+new Date(obj.startedDate).toLocaleTimeString() +
+                            '</td>' +
+                            '<td width=\"35%\">'
+                            + new Date(obj.toBeCompleted).toLocaleDateString()+','+new Date(obj.toBeCompleted).toLocaleTimeString() +
+                            '</td>' +
+                            '<td width=\"40%\">'+
+                            '<select onChange=\"window.location.href=obj.value\">' +
+                            '<option selected" >' +
+                            +obj.completenessLevel+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=10\" >' +
+                            '10%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=20\" >' +
+                            '20%' +
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=30\" >' +
+                            '30%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=40\" >'+
+                            '40%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=50\" >'+
+                            '50%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=60\" >'+
+                            '60%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=70\" >'+
+                            '70%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=80\" >'+
+                            '80%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=90\" >'+
+                            '90%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/complete-task.html?userTaskId='+obj.projectId+'\" >'+
+                            ' Mark as complete'+
+                            '</option>'+
+                            '</select>' +
+                            '</li>')
+                },
+                error: function(){
+                    alert('Error while request..');
+                }
+            });
+        }
+
+        /*
+        * End of add new project
+        * */
+
+/*
+* List my projects
+* */
+        jQuery.ajax({
+
+            url: "list-projects.html",
+            dataType:'json',
+            success: function (response) {
+                $("#myProjects").append("");
+                $.each(response, function(){
+//                    var id = this.userTaskId;
+                    $("#myProjects").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>" +
+                            "<table><tr>" +
+                            "<td width=\"45%\">"
+                            + this.projectName +
+                            '</td>' +
+                            '<td width=\"35%\">'
+                            + new Date(this.startedDate).toLocaleDateString()+','+new Date(this.startedDate).toLocaleTimeString() +
+                            '</td>' +
+                            '<td width=\"35%\">'
+                            + new Date(this.toBeCompleted).toLocaleDateString()+','+new Date(this.toBeCompleted).toLocaleTimeString() +
+                            '</td>' +
+                            '<td width=\"40%\">'+
+                            '<select onChange=\"window.location.href=this.value\">' +
+                            '<option selected" >' +
+                            +this.completenessLevel+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=10\" >' +
+                            '10%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=20\" >' +
+                            '20%' +
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=30\" >' +
+                            '30%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=40\" >'+
+                            '40%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=50\" >'+
+                            '50%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=60\" >'+
+                            '60%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=70\" >'+
+                            '70%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=80\" >'+
+                            '80%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=90\" >'+
+                            '90%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/complete-project.html?projectId='+this.projectId+'\" >'+
+                            ' Mark as complete'+
+                            '</option>'+
+                            '</select>' +
+                            '</li>')
+                });
+
+                listOfTask = response;
+            }
+        });
+/*
+* End of list my projects
+* */
+
+        /*
+         * List completed projects
+         * */
+        jQuery.ajax({
+
+            url: "completed-project.html",
+            dataType:'json',
+            success: function (response) {
+                $("#completedProjects").append("");
+                $.each(response, function(){
+//                    var id = this.userTaskId;
+                    $("#completedProjects").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>" +
+                            "<table><tr>" +
+                            "<td width=\"30%\">"
+                            + this.projectName +
+                            '</td>' +
+                            '<td width=\"30%\">'
+                            + new Date(this.completedDate).toLocaleDateString()+','+new Date(this.startedDate).toLocaleTimeString() +
+                            '</td>' +
+                            '<td width=\"40%\">'+
+                            '<a href="/mvccrud/notcomplete-project.html?userTaskId='+this.projectId+'" >Mark as incomplete </a> '+
+                            '</td>' +
+                            '<td width=\"20%\">'+
+                            '<a href="/mvccrud/delete-completed-project.html?projectId='+this.projectId+'" >Delete </a> '+
+                            '</td>' +
+                            '</li>')
+                });
+
+                listOfTask = response;
+            }
+        });
+
+        /*
+         * End of list completed projects
+         * */
+
     /*
     * Summary individual
     * */
@@ -333,30 +521,6 @@
         });
 
     </script>
-    <%--<script>--%>
-        <%--$(function () {--%>
-            <%--$('#myTab li:eq(1) a').tab('show');--%>
-        <%--});--%>
-    <%--</script>-- %>
-
-    <%--<script type="text/javascript">--%>
-        <%--function madeAjaxCall(){--%>
-            <%--$.ajax({--%>
-                <%--type: "post",--%>
-                <%--url: "addtask.html",--%>
-                <%--cache: false,--%>
-                <%--data:'firstName=' + $("#utn").val() + "&lastName=" + $("#utd").val(),--%>
-                <%--success: function(response){--%>
-                    <%--$('#result').html("");--%>
-                    <%--var obj = JSON.parse(response);--%>
-                    <%--$('#result').html("First Name:- " + obj.userTaskDiscription +"</br>Last Name:- " + obj.userTaskName );--%>
-                <%--},--%>
-                <%--error: function(){--%>
-                    <%--alert('Error while request..');--%>
-                <%--}--%>
-            <%--});--%>
-        <%--}--%>
-    <%--</script>--%>
 
 
 </head>
@@ -369,31 +533,6 @@
 <div id="pager" class="scroll" style="text-align:center;">
 
 </div>
-
-<%--<form name="employeeForm" method="post">--%>
-    <%--<table cellpadding="0" cellspacing="0" border="1" class="GridOne">--%>
-        <%--<tr>--%>
-            <%--<td>First Name</td>--%>
-            <%--<td><input type="text" name="firstName" id="firstName" value=""></td>--%>
-        <%--</tr>--%>
-        <%--<tr>--%>
-            <%--<td>Last Name</td>--%>
-            <%--<td><input type="text" name="lastName" id="lastName" value=""></td>--%>
-        <%--</tr>--%>
-        <%--<tr>--%>
-            <%--<td>Email</td>--%>
-            <%--<td><input type="text" name="email" id="email" value=""></td>--%>
-        <%--</tr>--%>
-        <%--<tr>--%>
-            <%--<td colspan="2" align="center"><input type="button" value="Ajax Submit" onclick="madeAjaxCall();"></td>--%>
-        <%--</tr>--%>
-    <%--</table>--%>
-<%--</form>--%>
-<%--<h1>Spring Framework Jquery Ajax Demo</h1>--%>
-<%--<div id="result"></div>--%>
-<%--<h1>Spring Framework Jquery Ajax Demo</h1>--%>
-<%--<div id="result1"></div>--%>
-<%--<table id="tasktable"></table>--%>
 
 
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -449,7 +588,7 @@
     <ul>
         <li><a href="#myTask">My Tasks</a></li>
         <li><a href="#myTaskSummary">Task Summary</a></li>
-        <li><a href="#myTaskCharts">Tasks Charts</a></li>
+        <li><a href="#groupProjects">My Projects</a></li>
         <li><a href="#groupTasks">Tickets</a></li>
         <li><a href="#groupTaskSummary">Tickets Summary</a></li>
         <li><a href="#groupTaskCharts">Ticket Charts</a></li>
@@ -464,152 +603,63 @@
                     <h3>Task List</h3>
                     <ul id="myTaskList">
                     </ul>
-                    <%--<c:if test="${!empty myTaskList}">--%>
-                    <%--<table align="left" border="1">--%>
-                        <%--<tr>--%>
-                            <%--<th>Task Title</th>--%>
-                            <%--<th>Started date/time</th>--%>
-                            <%--<th>Target date/time</th>--%>
-                            <%--<th>Edit/Delete</th>--%>
-                            <%--<th>Progres(%)</th>--%>
-                        <%--</tr>--%>
 
-                        <%--<c:forEach items="${myTaskList}" var="myTaskList">--%>
-                            <%--<tr>--%>
-                                <%--<td><c:out value="${myTaskList.userTaskName}"/></td>--%>
-                                <%--<td><c:out value="${myTaskList.startedDate}"/></td>--%>
-                                <%--<td><c:out value="${myTaskList.toBeCompleted}"/></td>--%>
-                                <%--<td align="center"><a href="/mvccrud/edit-task.html?userTaskId=${myTaskList.userTaskId}">Edit</a> | <a href="/mvccrud/delete-task.html?userTaskId=${myTaskList.userTaskId}">Delete</a>--%>
-                                <%--<td>--%>
-                                    <%--<select onChange="window.location.href=this.value" name="${myTaskList.completenessLevel}">--%>
-                                        <%--<option value="${myTaskList.completenessLevel}">--%>
-                                                <%--${myTaskList.completenessLevel}--%>
-                                        <%--</option>--%>
-                                        <%--<option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=10" >--%>
-                                            <%--10%--%>
-                                        <%--</option>--%>
-                                        <%--<option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=20" >--%>
-                                            <%--20%--%>
-                                        <%--</option>--%>
-                                        <%--<option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=30" >--%>
-                                            <%--30%--%>
-                                        <%--</option>--%>
-                                        <%--<option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=40" >--%>
-                                            <%--40%--%>
-                                        <%--</option>--%>
-                                        <%--<option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=50" >--%>
-                                            <%--50%--%>
-                                        <%--</option>--%>
-                                        <%--<option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=60" >--%>
-                                            <%--60%--%>
-                                        <%--</option>--%>
-                                        <%--<option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=70" >--%>
-                                            <%--70%--%>
-                                        <%--</option>--%>
-                                        <%--<option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=80" >--%>
-                                            <%--80%--%>
-                                        <%--</option>--%>
-                                        <%--<option value="/mvccrud/update-task.html?userTaskId=${myTaskList.userTaskId}&completenessLevel=90" >--%>
-                                            <%--90%--%>
-                                        <%--</option>--%>
-                                        <%--<option value="/mvccrud/complete-task.html?userTaskId=${myTaskList.userTaskId}" >--%>
-                                            <%--Mark as complete--%>
-                                        <%--</option>--%>
-                                    <%--</select>--%>
-
-
-                                <%--</td>--%>
-                            <%--</tr>--%>
-                        <%--</c:forEach>--%>
-                    <%--</table>--%>
-
-                    <%--</c:if>--%>
-
-
-                <%--</div>--%>
+            <div class="row">
+                <div class="col-md-5">
                 <h3>Add new task</h3>
-                <form name="employeeForm" method="post">
-                    <table>
-                        <tr>
-                            <td>Title</td>
-                            <td><input type="text" name="userTaskName" id="userTaskName" value=""></td>
-                        </tr>
-                        <tr>
-                            <td>Description</td>
-                            <td><input type="text" name="userTaskDescription" id="userTaskDescription" value=""></td>
-                        </tr>
-                        <tr>
-                            <td>Task Started date/time</td>
-                            <td><input type="text" name="startedDate" id="startedDate" ></td>
-                        </tr>
-                            <script>
-                            AnyTime.picker( "startedDate",
-                            { format: "%M %d %Y %T", firstDOW: 1 } );
-                            </script>
-                        <tr>
-                            <td>Target date/time</td>
-                            <td><input type="text" name="toBeCompleted" id="toBeCompleted"></td>
-                        </tr>
-                        <script>
-                        AnyTime.picker( "toBeCompleted",
-                        { format: "%M %d %Y %T", firstDOW: 1 } );
-                        </script>
-                        <tr>
-                            <td colspan="2" align="center"><input type="button" value="Submit" onclick="madeAjaxCall();"></td>
-                        </tr>
-                    </table>
-                </form>
+                    <form class='form-inline' name="employeeForm" method="post">
+                        <fieldset>
+                            <div class="control-group">
+                                <!-- Username -->
+                                <label class="control-label">Title</label>
+                                <div class="controls"><input type="text" name="userTaskName" id="userTaskName" class="input-xlarge" value="">
+                                </div>
+                            </div>
 
+                            <div class="control-group">
+                                <label class="control-label">Description</label>
+                                <div class="controls"> <textarea name="userTaskDescription" id="userTaskDescription" class="input-xlarge" value=""></textarea>
+                                </div></div>
+
+                            <div class="control-group">
+                                <label class="control-label">Task Started date/time</label>
+                                <div class="controls"><input type="text" name="startedDate" id="startedDate" >
+                                    <script>
+                                        AnyTime.picker( "startedDate",
+                                                { format: "%M %d %Y %T", firstDOW: 1 } );
+                                    </script>
+                                </div></div>
+
+
+
+                            <div class="control-group">
+                                <label class="control-label">Target date/time</label>
+                                <div class="controls"><input type="text" name="toBeCompleted" id="toBeCompleted">
+                                    <script>
+                                        AnyTime.picker( "toBeCompleted",
+                                                { format: "%M %d %Y %T", firstDOW: 1 } );
+                                    </script>
+                                </div></div>
+
+<br />
+
+                            <div class="control-group">
+                                <input type="button" class="btn btn-primary" value="Submit" onclick="madeAjaxCall();">
+                            </div>
+                        </fieldset>
+                    </form>
+
+
+                </div>
+
+            <div class="col-md-7">
                 <h3>Completed Task List</h3>
                 <ul id="completedTaskList">
                 </ul>
-                <%--<div class="col-md-5">--%>
-                    <%--<h2>Add New Task</h2>--%>
-                    <%--<form method="post" >--%>
-                        <%--<table>--%>
-                            <%--<tr>--%>
-                                <%--<td><input type="hidden" name="userTaskId" id="uti"/><%--<span style="color: #ff0404; "><form:errors path='empName' /></span>--%>--%>
-                                <%--</td>--%>
-                            <%--</tr>--%>
-                            <%--<tr>--%>
-                                <%--<td>Task Name</td>--%>
-                                <%--<td><input type="text" name="userTaskName" id="utn"/><%--<span style="color: #ff0404; "><form:errors path='empName' /></span>--%>--%>
-                                <%--</td>--%>
-                            <%--</tr>--%>
-                            <%--<tr>--%>
-                                <%--<td>Task Discription</td>--%>
-                                <%--<td><textarea cols="20" rows="4" name="userTaskDiscription" id="utd"></textarea><%--<span style="color: #ff0404; "><form:errors path='empAge' /></span></td>--%>--%>
-                                <%--</td>--%>
-                            <%--</tr>--%>
-                            <%--<tr>--%>
-                                <%--<td>Task Started date/time</td>--%>
-                                <%--<td><input type="text" name="startedDate" id="startedDate" /><%--<span style="color: #ff0404; "><form:errors path='salary' /></span></td>--%>--%>
-                            <%--</tr>--%>
-                            <%--<script>--%>
-                                <%--AnyTime.picker( "startedDate",--%>
-                                        <%--{ format: "%M %d %Y %T", firstDOW: 1 } );--%>
-                            <%--</script>--%>
-                            <%--<tr>--%>
-                                <%--<td>Target dat/time</td>--%>
-                                <%--<td><input type="text" name="toBeCompleted" id="toBeCompleted"/><%--<span style="color: #ff0404; "><form:errors path='empAddress' /></span>--%>--%>
-                                <%--</td>--%>
-                            <%--</tr>--%>
-                            <%--<script>--%>
-                                <%--AnyTime.picker( "toBeCompleted",--%>
-                                        <%--{ format: "%M %d %Y %T", firstDOW: 1 } );--%>
-                            <%--</script>--%>
-                            <%--<tr>--%>
-                                <%--<td colspan="2"><input type="submit" value="Submit" onclick="madeAjaxCall();"/></td>--%>
-                            <%--</tr>--%>
-                        <%--</table>--%>
-
-                    <%--</form>--%>
-                <%--</div>--%>
-
-            <%--</div>--%>
-
+               
         </div>
-
+            </div>
+            </div>
 
         <div id="myTaskSummary">
             <ul id="indCount">
@@ -619,55 +669,72 @@
         </div>
 
 
-        <div id="myTaskCharts">
-            <p>jMeter is an Open Source testing software. It is 100% pure
-                Java application for load and performance testing.</p>
+        <div id="groupProjects">
+            <h3>Project List</h3>
+            <ul id="myProjects">
+            </ul>
+
+            <div class="row">
+                <div class="col-md-5">
+                    <h3>Add new Project</h3>
+                    <form class='form-inline' name="employeeForm" method="post">
+                        <fieldset>
+                            <div class="control-group">
+                                <!-- Username -->
+                                <label class="control-label">Title</label>
+                                <div class="controls"><input type="text" name="projectName" id="projectName" class="input-xlarge" value="">
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label">Description</label>
+                                <div class="controls"> <textarea name="projectDiscription" id="projectDiscription" class="input-xlarge" value=""></textarea>
+                                </div></div>
+
+                            <div class="control-group">
+                                <label class="control-label">Task Started date/time</label>
+                                <div class="controls"><input type="text" name="startedDate" id="projectStartedDate" >
+                                    <script>
+                                        AnyTime.picker( "projectStartedDate",
+                                                { format: "%M %d %Y %T", firstDOW: 1 } );
+                                    </script>
+                                </div></div>
+
+
+
+                            <div class="control-group">
+                                <label class="control-label">Target date/time</label>
+                                <div class="controls"><input type="text" name="toBeCompleted" id="projectToBeCompleted">
+                                    <script>
+                                        AnyTime.picker( "projectToBeCompleted",
+                                                { format: "%M %d %Y %T", firstDOW: 1 } );
+                                    </script>
+                                </div></div>
+
+                            <br />
+
+                            <div class="control-group">
+                                <input type="button" class="btn btn-primary" value="Submit" onclick="addProjectAjax();">
+                            </div>
+                        </fieldset>
+                    </form>
+
+
+                </div>
+
+                <div class="col-md-7">
+                    <h3>Completed Project List</h3>
+                    <ul id="completedProjects">
+                    </ul>
+
+                </div>
+            </div>
+        </div>
         </div>
 
 
         <div id="groupTasks">
-            <h3>Add new project</h3>
-            <form name="employeeForm" method="post">
-                <table>
-                    <tr>
-                        <td>Project Title</td>
-                        <td><input type="text" name="projrctName" id="projrctName" value=""></td>
-                    </tr>
-                    <tr>
-                        <td>Description</td>
-                        <td><input type="text" name="projrctDescription" id="projrctDescription" value=""></td>
-                    </tr>
-                    <tr>
-                        <td>Project Started date/time</td>
-                        <td><input type="text" name="projrctstartedDate" id="projrctstartedDate" ></td>
-                    </tr>
-                    <script>
-                        AnyTime.picker( "projrctstartedDate",
-                                { format: "%M %d %Y %T", firstDOW: 1 } );
-                    </script>
-                    <tr>
-                        <td>Target date/time</td>
-                        <td><input type="text" name="projrcttoBeCompleted" id="projrcttoBeCompleted"></td>
-                    </tr>
-                    <script>
-                        AnyTime.picker( "projrcttoBeCompleted",
-                                { format: "%M %d %Y %T", firstDOW: 1 } );
-                    </script>
 
-                    <tr>
-                        <td></td>
-                        <td><select id="asignees" name="asignees" multiple="multiple">
-
-                        </select>
-                        </td>
-                    </tr>
-                    <tr>
-                    </tr>
-                    <tr>
-                        <td colspan="2" align="center"><input type="button" value="Submit" onclick="madeAjaxCall();"></td>
-                    </tr>
-                </table>
-            </form>
         </div>
 
 

@@ -40,13 +40,13 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public Project getProject(long projectId) {
-        return null;
+        return projectDao.getProject(projectId);
     }
 
     @Override
     @Transactional
     public void deleteProject(Project project) {
-
+        projectDao.deleteProject(project);
     }
 
     @Override
@@ -58,6 +58,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public void update(long projectId, int completenessLevel) {
-
+projectDao.update(projectId,completenessLevel);
     }
 }

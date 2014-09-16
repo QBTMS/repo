@@ -34,7 +34,9 @@ public class IndividualCounts {
     }
 
     public float getTaskCompletenessRate() {
+        if (tasksCreated > 0){
         return (tasksCompleted / tasksCreated) * 100;
+        }else return 0;
 
     }
 

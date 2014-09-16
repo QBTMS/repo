@@ -24,6 +24,9 @@ import java.util.List;
 public class UserDaoImpl implements UserDao {
 	@Autowired
 	private SessionFactory session;
+
+    @Autowired
+    private UsersDao usersDao;
 	
 	@Override
 	public boolean addUser(User user) {
@@ -55,9 +58,9 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public User findUserByName(String username) {
         System.out.println("============================="+username);
-        List<User> users = new ArrayList<User>();
+        List<User> users;
 
-        users = session.getCurrentSession().createQuery("from User where username=?")
+        users = session.getCurrentSession().createQuery("from model.User where username=?")
                 .setParameter(0, username).list();
 
         if (users.size() > 0) {
@@ -95,8 +98,14 @@ public class UserDaoImpl implements UserDao {
         Authentication authentication = SecurityContextHolder.getContext().
                 getAuthentication();
         String ownerName = authentication.getName();
-        User user = findUserByName(ownerName);
-        return user.getId();
+
+        List<Users> users = usersDao.getUsers(ownerName);
+        for (int i =0; i < users.size(); i++){
+            if (users.get(i).getUsername().equals(ownerName)){
+                return users.get(i).getId();
+            }
+        }
+        return 0;
     }
 
 }
