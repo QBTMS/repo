@@ -42,6 +42,7 @@
                 <value>model.UserTask</value>
                 <value>model.CompletedUserTask</value>
                 <value>model.Project</value>
+                <value>model.ProjectTasks</value>
                 <value>model.ProjectUser</value>
                 <value>model.Users</value>
                 <value>model.UsersAndRoles</value>

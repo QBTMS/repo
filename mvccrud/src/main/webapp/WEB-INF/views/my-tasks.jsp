@@ -480,7 +480,7 @@
                 type: "post",
                 url: "add-project-task.html",
                 cache: false,
-                data:'project_id=' + $("#project_id").val() +'asignee=' + $("#asignee").val() +'projectTaskName=' + $("#projectTaskName").val() + "&projectTaskDiscription=" + $("#projectTaskDiscription").val() + "&startedDate=" + $("#projectTaskStartedDate").val() + "&toBeCompleted=" + $("#projectTaskToBeCompleted").val(),
+                data:'&project_id=' + $("#project_id").val() +'&asignee=' + $("#asignee").val() +'&projectTaskName=' + $("#projectTaskName").val() + "&projectTaskDiscription=" + $("#projectTaskDiscription").val() + "&startedDate=" + $("#projectTaskStartedDate").val() + "&toBeCompleted=" + $("#projectTaskToBeCompleted").val(),
                 success: function(response){
                     var obj = JSON.parse(response);
                     $("#projectTasks").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>" +
@@ -581,8 +581,10 @@
             url: "list-user-names.html",
             dataType:'json',
             success: function (response) {
-                $("#completedProjectTasks").append("<p>"+response+"</p>");
-
+                $("#asignee").append("");
+                $.each(response, function(){
+                   $("#asignee").append('<option value='+this.id+'>' +this.name+'</option>');
+                });
             }
         });
 
@@ -591,7 +593,10 @@
             url: "list-project-names.html",
             dataType:'json',
             success: function (response) {
-                $("#projectTasks").append("<p>"+response+"</p>");
+                $("#project_id").append("");
+                $.each(response, function(){
+                    $("#project_id").append('<option value='+this.projectId+'>' +this.projectName+'</option>');
+                });
 
             }
         });
@@ -825,21 +830,21 @@
                         <fieldset>
                             <div class="control-group">
                                 <!-- Username -->
-                                <label class="control-label">Title</label>
-                                <div class="controls"><input type="text" name="project_id" id="project_id" class="input-xlarge" value="">
+                                <label class="control-label">Project</label>
+                                <div class="controls"><select name="project_id" id="project_id" class="input-xlarge"></select>
                                 </div>
                             </div>
 
                             <div class="control-group">
                                 <!-- Username -->
-                                <label class="control-label">Title</label>
-                                <div class="controls"><input type="text" name="asignee" id="asignee" class="input-xlarge" value="">
+                                <label class="control-label">Asignee</label>
+                                <div class="controls"><select name="asignee" id="asignee" class="input-xlarge"></select>
                                 </div>
                             </div>
 
                             <div class="control-group">
                                 <!-- Username -->
-                                <label class="control-label">Title</label>
+                                <label class="control-label">Task</label>
                                 <div class="controls"><input type="text" name="projectTaskName" id="projectTaskName" class="input-xlarge" value="">
                                 </div>
                             </div>

@@ -24,7 +24,7 @@ public class ProjectTasksServiceImpl implements ProjectTasksService {
     @Override
     @Transactional
     public void addProjectTask(ProjectTasks projectTasks) {
-
+projectTasksDao.addProjectTask(projectTasks);
     }
 
     @Override

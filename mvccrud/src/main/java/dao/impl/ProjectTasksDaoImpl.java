@@ -23,7 +23,7 @@ public class ProjectTasksDaoImpl implements ProjectTasksDao {
 
     @Override
     public void addProjectTask(ProjectTasks projectTasks) {
-
+        sessionFactory.getCurrentSession().saveOrUpdate(projectTasks);
     }
 
     @Override

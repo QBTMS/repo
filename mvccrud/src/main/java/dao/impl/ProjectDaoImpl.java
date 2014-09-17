@@ -4,8 +4,13 @@ import dao.ProjectDao;
 import dao.UserDao;
 import model.Project;
 import model.User;
+import model.Users;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,12 +46,21 @@ public class ProjectDaoImpl implements ProjectDao {
     @Override
     public List<Project> listMyProjectNames() {
         int ownerId = userDao.getUserId();
-        String hql = "SELECT P.projectName,P.projectId FROM model.Project P WHERE P.owner = :ownerId";
-        Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        query.setParameter("ownerId", Long.parseLong(String.valueOf(ownerId)));
-        List results = query.list();
+//        String hql = "SELECT P.projectName,P.projectId FROM model.Project P WHERE P.owner = :ownerId";
+//        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+//        query.setParameter("ownerId", Long.parseLong(String.valueOf(ownerId)));
+//        List results = query.list();
+//
+//        return results;
+        Criteria cr = sessionFactory.getCurrentSession().createCriteria(Project.class)
+                .add(Restrictions.eq("owner", Long.parseLong(String.valueOf(ownerId))))
+                .setProjection(Projections.projectionList()
+                        .add(Projections.property("projectId"), "projectId")
+                        .add(Projections.property("projectName"), "projectName"))
+                .setResultTransformer(Transformers.aliasToBean(Project.class));
 
-        return results;
+        List<Project> list = cr.list();
+        return list;
     }
 
     @Override

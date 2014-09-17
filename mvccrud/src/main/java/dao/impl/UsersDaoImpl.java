@@ -4,8 +4,11 @@ import dao.UsersDao;
 import model.User;
 import model.Users;
 import model.UsersAndRoles;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
+import org.hibernate.transform.Transformers;
 import org.omg.CosNaming._NamingContextExtStub;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -34,11 +37,14 @@ public class UsersDaoImpl implements UsersDao {
 
     @Override
     public List<Users> listAllUserNames() {
-        String hql = "SELECT U.name,U.id FROM model.Users U";
-        Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        List results = query.list();
+        Criteria cr = sessionFactory.getCurrentSession().createCriteria(Users.class)
+                .setProjection(Projections.projectionList()
+                        .add(Projections.property("id"), "id")
+                        .add(Projections.property("name"), "name"))
+                .setResultTransformer(Transformers.aliasToBean(Users.class));
 
-        return results;
+        List<Users> list = cr.list();
+        return list;
     }
 
 }
