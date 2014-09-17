@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import service.UserDetailsServiceImpl;
 import service.UserService;
 import service.UsersAndRolesService;
 import service.UsersService;
@@ -61,7 +60,7 @@ public class UserController {
     @RequestMapping(value = "/list-users", method = RequestMethod.GET)
     public String listAllUsers(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-        List<User> usersList = userService.getAllUsers();
+        List<Users> usersList = usersService.listAllUserNames();
         OutputStream out = new ByteArrayOutputStream();
         ObjectMapper mapper = new ObjectMapper();
 

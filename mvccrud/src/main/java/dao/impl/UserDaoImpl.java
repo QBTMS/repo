@@ -1,5 +1,7 @@
-package dao;
+package dao.impl;
 
+import dao.UserDao;
+import dao.UsersDao;
 import model.Role;
 import model.User;
 import model.UserStatus;

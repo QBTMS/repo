@@ -472,6 +472,78 @@
          * End of list completed projects
          * */
 
+        /*
+         * Add project task
+         * */
+        function addProjectTaskAjax(){
+            $.ajax({
+                type: "post",
+                url: "add-project-task.html",
+                cache: false,
+                data:'project_id=' + $("#project_id").val() +'asignee=' + $("#asignee").val() +'projectTaskName=' + $("#projectTaskName").val() + "&projectTaskDiscription=" + $("#projectTaskDiscription").val() + "&startedDate=" + $("#projectTaskStartedDate").val() + "&toBeCompleted=" + $("#projectTaskToBeCompleted").val(),
+                success: function(response){
+                    var obj = JSON.parse(response);
+                    $("#projectTasks").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>" +
+                            "<table><tr>" +
+                            "<td width=\"45%\">"
+                            + obj.projectTaskName +
+                            '</td>' +
+                            '<td width=\"35%\">'
+                            + new Date(obj.startedDate).toLocaleDateString()+','+new Date(obj.startedDate).toLocaleTimeString() +
+                            '</td>' +
+                            '<td width=\"35%\">'
+                            + new Date(obj.toBeCompleted).toLocaleDateString()+','+new Date(obj.toBeCompleted).toLocaleTimeString() +
+                            '</td>' +
+                            '<td width=\"40%\">'+
+                            '<select onChange=\"window.location.href=obj.value\">' +
+                            '<option selected" >' +
+                            +obj.completenessLevel+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=10\" >' +
+                            '10%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=20\" >' +
+                            '20%' +
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=30\" >' +
+                            '30%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=40\" >'+
+                            '40%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=50\" >'+
+                            '50%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=60\" >'+
+                            '60%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=70\" >'+
+                            '70%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=80\" >'+
+                            '80%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=90\" >'+
+                            '90%'+
+                            '</option>'+
+                            '<option value=\"/mvccrud/complete-task.html?userTaskId='+obj.projectId+'\" >'+
+                            ' Mark as complete'+
+                            '</option>'+
+                            '</select>' +
+                            '</li>')
+                },
+                error: function(){
+                    alert('Error while request..');
+                }
+            });
+        }
+
+        /*
+         * End of add project task
+         * */
+
+
+
     /*
     * Summary individual
     * */
@@ -506,15 +578,23 @@
 * */
 
         jQuery.ajax({
-            url: "list-users.html",
+            url: "list-user-names.html",
             dataType:'json',
             success: function (response) {
-                $("#tttt").append("");
+                $("#completedProjectTasks").append("<p>"+response+"</p>");
 
             }
         });
 
 
+        jQuery.ajax({
+            url: "list-project-names.html",
+            dataType:'json',
+            success: function (response) {
+                $("#projectTasks").append("<p>"+response+"</p>");
+
+            }
+        });
 
          $(document).ready(function(){
             $("#asignees").multiselect();
@@ -589,7 +669,7 @@
         <li><a href="#myTask">My Tasks</a></li>
         <li><a href="#myTaskSummary">Task Summary</a></li>
         <li><a href="#groupProjects">My Projects</a></li>
-        <li><a href="#groupTasks">Tickets</a></li>
+        <li><a href="#groupTasks">Project Tasks</a></li>
         <li><a href="#groupTaskSummary">Tickets Summary</a></li>
         <li><a href="#groupTaskCharts">Ticket Charts</a></li>
         <li><a href="#overall">Overall</a></li>
@@ -730,12 +810,86 @@
                 </div>
             </div>
         </div>
-        </div>
+
 
 
         <div id="groupTasks">
+            <h3>Project Task List</h3>
+            <ul id="projectTasks">
+            </ul>
 
+            <div class="row">
+                <div class="col-md-5">
+                    <h3>Add new Project</h3>
+                    <form class='form-inline' name="employeeForm" method="post">
+                        <fieldset>
+                            <div class="control-group">
+                                <!-- Username -->
+                                <label class="control-label">Title</label>
+                                <div class="controls"><input type="text" name="project_id" id="project_id" class="input-xlarge" value="">
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <!-- Username -->
+                                <label class="control-label">Title</label>
+                                <div class="controls"><input type="text" name="asignee" id="asignee" class="input-xlarge" value="">
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <!-- Username -->
+                                <label class="control-label">Title</label>
+                                <div class="controls"><input type="text" name="projectTaskName" id="projectTaskName" class="input-xlarge" value="">
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label">Description</label>
+                                <div class="controls"> <textarea name="projectTaskDiscription" id="projectTaskDiscription" class="input-xlarge" value=""></textarea>
+                                </div></div>
+
+                            <div class="control-group">
+                                <label class="control-label">Task Started date/time</label>
+                                <div class="controls"><input type="text" name="startedDate" id="projectTaskStartedDate" >
+                                    <script>
+                                        AnyTime.picker( "projectTaskStartedDate",
+                                                { format: "%M %d %Y %T", firstDOW: 1 } );
+                                    </script>
+                                </div>
+                            </div>
+
+
+
+                            <div class="control-group">
+                                <label class="control-label">Target date/time</label>
+                                <div class="controls"><input type="text" name="toBeCompleted" id="projectTaskToBeCompleted">
+                                    <script>
+                                        AnyTime.picker( "projectTaskToBeCompleted",
+                                                { format: "%M %d %Y %T", firstDOW: 1 } );
+                                    </script>
+                                </div></div>
+
+                            <br />
+
+                            <div class="control-group">
+                                <input type="button" class="btn btn-primary" value="Submit" onclick="addProjectTaskAjax();">
+                            </div>
+                        </fieldset>
+                    </form>
+
+
+                </div>
+
+                <div class="col-md-7">
+                    <h3>Completed Project List</h3>
+                    <ul id="completedProjectTasks">
+                    </ul>
+
+                </div>
+            </div>
         </div>
+
 
 
         <div id="groupTaskSummary">

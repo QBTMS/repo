@@ -1,5 +1,6 @@
-package dao;
+package dao.impl;
 
+import dao.CompletedUserTaskDao;
 import model.CompletedUserTask;
 import model.UserTask;
 import org.hibernate.Query;

@@ -1,5 +1,7 @@
-package dao;
+package dao.impl;
 
+import dao.ProjectDao;
+import dao.UserDao;
 import model.Project;
 import model.User;
 import org.hibernate.Query;
@@ -34,6 +36,17 @@ public class ProjectDaoImpl implements ProjectDao {
     public List<Project> listMyProject() {
         int ownerId = userDao.getUserId();
         return (List<Project>) sessionFactory.getCurrentSession().createQuery("from model.Project pt where pt.owner = '"+ownerId+"'").list();
+    }
+
+    @Override
+    public List<Project> listMyProjectNames() {
+        int ownerId = userDao.getUserId();
+        String hql = "SELECT P.projectName,P.projectId FROM model.Project P WHERE P.owner = :ownerId";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("ownerId", Long.parseLong(String.valueOf(ownerId)));
+        List results = query.list();
+
+        return results;
     }
 
     @Override

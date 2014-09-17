@@ -1,4 +1,4 @@
-package service;
+package service.impl;
 
 import dao.ProjectDao;
 import model.Project;
@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import service.ProjectService;
 
 import java.util.List;
 
@@ -29,6 +30,11 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     public List<Project> listMyProject() {
         return projectDao.listMyProject();
+    }
+
+    @Override
+    public List<Project> listMyProjectNames() {
+        return projectDao.listMyProjectNames();
     }
 
     @Override

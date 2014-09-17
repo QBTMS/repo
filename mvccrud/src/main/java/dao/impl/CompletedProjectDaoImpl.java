@@ -1,5 +1,7 @@
-package dao;
+package dao.impl;
 
+import dao.CompletedProjectDao;
+import dao.UserDao;
 import model.CompletedProject;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;

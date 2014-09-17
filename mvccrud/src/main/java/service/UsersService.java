@@ -11,4 +11,5 @@ import java.util.List;
 public interface UsersService {
     boolean addusres(Users users);
     List<Users> getUsers(String email);
+    public List<Users> listAllUserNames();
 }

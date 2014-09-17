@@ -1,5 +1,6 @@
-package dao;
+package dao.impl;
 
+import dao.UserTaskCompletenessLevelDao;
 import model.UserTask;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;

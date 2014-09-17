@@ -1,5 +1,6 @@
-package dao;
+package dao.impl;
 
+import dao.VehicleDao;
 import model.Employee;
 import model.Vehicle;
 import org.hibernate.SessionFactory;

@@ -1,5 +1,6 @@
-package dao;
+package dao.impl;
 
+import dao.ProjectUserDao;
 import model.ProjectUser;
 import org.springframework.stereotype.Repository;
 

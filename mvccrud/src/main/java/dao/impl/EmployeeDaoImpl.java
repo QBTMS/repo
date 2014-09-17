@@ -1,5 +1,6 @@
-package dao;
+package dao.impl;
 
+import dao.EmployeeDao;
 import model.Employee;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;

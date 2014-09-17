@@ -12,6 +12,8 @@ public interface ProjectService {
 
     public List<Project> listMyProject();
 
+    public List<Project> listMyProjectNames();
+
     public List<Project> listAsignedProject();
 
     public Project getProject(long projectId);

@@ -1,5 +1,6 @@
-package dao;
+package dao.impl;
 
+import dao.UserTaskDao;
 import model.CompletedUserTask;
 import model.User;
 import model.UserTask;

@@ -1,4 +1,4 @@
-package service;
+package service.impl;
 
 import dao.UserTaskDao;
 import model.UserTask;
@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import service.UserTaskService;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  */
 @Service("userTaskService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class UserTaskServiceImpl implements UserTaskService{
+public class UserTaskServiceImpl implements UserTaskService {
 
     @Autowired
     private UserTaskDao userTaskDao;
