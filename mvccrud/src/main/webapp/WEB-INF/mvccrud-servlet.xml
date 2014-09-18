@@ -47,6 +47,7 @@
                 <value>model.Users</value>
                 <value>model.UsersAndRoles</value>
                 <value>model.CompletedProject</value>
+                <value>model.CompletedProjectTask</value>
             </array>
         </property>
         <property name="hibernateProperties">

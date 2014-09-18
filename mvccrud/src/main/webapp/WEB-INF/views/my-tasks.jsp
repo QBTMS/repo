@@ -27,13 +27,13 @@
     <script src="js/jquery.js"></script>
     <script src="js/anytime.js"></script>
     <script src="js/jquery-ui.js"></script>
-    <script src="js/jquery.multiselect.js"></script>
+    <%--<script src="js/jquery.multiselect.js"></script>
     <script type="text/javascript" src="jqplot/plugins/jqplot.pieRenderer.min.js"></script>
     <script type="text/javascript" src="jqplot/plugins/jqplot.donutRenderer.min.js"></script>
     <link class="include" rel="stylesheet" type="text/css" href="jqplot/jquery.jqplot.min.css" />
     <link rel="stylesheet" type="text/css" href="jqplot/examples.min.css" />
     <link type="text/css" rel="stylesheet" href="jqplot/syntaxhighlighter/styles/shCoreDefault.min.css" />
-    <link type="text/css" rel="stylesheet" href="jqplot/syntaxhighlighter/styles/shThemejqPlot.min.css" />
+    <link type="text/css" rel="stylesheet" href="jqplot/syntaxhighlighter/styles/shThemejqPlot.min.css" />--%>
 
 
     <%--<link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">--%>
@@ -76,6 +76,10 @@
         #completedProjects { list-style-type: none; margin: 0; padding: 0; width: 100%; height: auto }
         #completedProjects li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.0em; height: 40px; width: 100%; }
         #completedProjects li span { position: absolute; margin-left: -1.3em; }
+
+        #projectTasks { list-style-type: none; margin: 0; padding: 0; width: 100%; height: auto }
+        #projectTasks li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.0em; height: 40px; width: 100%;}
+        #projectTasks li span { position: absolute; margin-left: -1.3em; }
     </style>
     <%--<script>--%>
 
@@ -103,6 +107,7 @@
 
     <script>
         var listOfTask = [];
+        var listOfProjects = [];
         jQuery.ajax({
 
             url: "add-task.html",
@@ -174,6 +179,11 @@
         $(function() {
             $( "#myProjects" ).sortable();
             $( "#myProjects" ).disableSelection();
+        });
+
+        $(function() {
+            $( "#projectTasks" ).sortable();
+            $( "#projectTasks" ).disableSelection();
         });
 
         /*
@@ -499,34 +509,34 @@
                             '<option selected" >' +
                             +obj.completenessLevel+
                             '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=10\" >' +
+                            '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+obj.projectTaskId+'&completenessLevel=10\" >' +
                             '10%'+
                             '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=20\" >' +
+                            '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+obj.projectTaskId+'&completenessLevel=20\" >' +
                             '20%' +
                             '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=30\" >' +
+                            '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+obj.projectTaskId+'&completenessLevel=30\" >' +
                             '30%'+
                             '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=40\" >'+
+                            '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+obj.projectTaskId+'&completenessLevel=40\" >'+
                             '40%'+
                             '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=50\" >'+
+                            '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+obj.projectTaskId+'&completenessLevel=50\" >'+
                             '50%'+
                             '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=60\" >'+
+                            '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+obj.projectTaskId+'&completenessLevel=60\" >'+
                             '60%'+
                             '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=70\" >'+
+                            '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+obj.projectTaskId+'&completenessLevel=70\" >'+
                             '70%'+
                             '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=80\" >'+
+                            '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+obj.projectTaskId+'&completenessLevel=80\" >'+
                             '80%'+
                             '</option>'+
-                            '<option value=\"/mvccrud/update-task.html?userTaskId='+obj.projectId+'&completenessLevel=90\" >'+
+                            '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+obj.projectTaskId+'&completenessLevel=90\" >'+
                             '90%'+
                             '</option>'+
-                            '<option value=\"/mvccrud/complete-task.html?userTaskId='+obj.projectId+'\" >'+
+                            '<option value=\"/mvccrud/complete-project-task.html?projectTaskId='+obj.projectId+'\" >'+
                             ' Mark as complete'+
                             '</option>'+
                             '</select>' +
@@ -541,6 +551,7 @@
         /*
          * End of add project task
          * */
+
 
 
 
@@ -593,6 +604,7 @@
             url: "list-project-names.html",
             dataType:'json',
             success: function (response) {
+                listOfProjects = response;
                 $("#project_id").append("");
                 $.each(response, function(){
                     $("#project_id").append('<option value='+this.projectId+'>' +this.projectName+'</option>');
@@ -604,6 +616,89 @@
          $(document).ready(function(){
             $("#asignees").multiselect();
         });
+
+
+        /*
+         * List my project tasks
+         *
+         * $.each( listOfProjects, function( key, value ) {
+         if(key == this.project_id){
+         pName = value;
+         }
+         });
+         * */
+        jQuery.ajax({
+
+            url: "list-project-tasks.html",
+            dataType:'json',
+            success: function (response) {
+                var pName;
+                $.each( listOfProjects, function( key, value ) {
+                    var id = this.projectId;
+                    var pn = this.projectName;
+                    $("#projectTasks").append("");
+                    $.each(response, function(){
+                    if(id == this.project_id){
+                        pName = pn;
+                        $("#projectTasks").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>" +
+                                "<table><tr>" +
+                                "<td width=\"20%\">"
+                                +pName +
+                                '</td>' +
+                                "<td width=\"20%\">"
+                                + this.projectTaskName +
+                                '</td>' +
+                                '<td width=\"35%\">'
+                                + new Date(this.startedDate).toLocaleDateString()+','+new Date(this.startedDate).toLocaleTimeString() +
+                                '</td>' +
+                                '<td width=\"35%\">'
+                                + new Date(this.toBeCompleted).toLocaleDateString()+','+new Date(this.toBeCompleted).toLocaleTimeString() +
+                                '</td>' +
+                                '<td width=\"40%\">'+
+                                '<select onChange=\"window.location.href=this.value\">' +
+                                '<option selected" >' +
+                                +this.completenessLevel+
+                                '</option>'+
+                                '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=10\" >' +
+                                '10%'+
+                                '</option>'+
+                                '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=20\" >' +
+                                '20%' +
+                                '</option>'+
+                                '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=30\" >' +
+                                '30%'+
+                                '</option>'+
+                                '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=40\" >'+
+                                '40%'+
+                                '</option>'+
+                                '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=50\" >'+
+                                '50%'+
+                                '</option>'+
+                                '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=60\" >'+
+                                '60%'+
+                                '</option>'+
+                                '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=70\" >'+
+                                '70%'+
+                                '</option>'+
+                                '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=80\" >'+
+                                '80%'+
+                                '</option>'+
+                                '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=90\" >'+
+                                '90%'+
+                                '</option>'+
+                                '<option value=\"/mvccrud/complete-project.html?projectId='+this.projectId+'\" >'+
+                                ' Mark as complete'+
+                                '</option>'+
+                                '</select>' +
+                                '</li>')
+                    }
+                });
+                });
+            }
+        });
+        /*
+         * End of list my project tasks
+         * */
 
     </script>
 

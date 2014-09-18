@@ -1,5 +1,6 @@
 package controller;
 
+import model.CompletedProjectTask;
 import model.Project;
 import model.ProjectTasks;
 import model.Users;
@@ -9,16 +10,15 @@ import org.springframework.security.web.PortResolverImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import service.CompletedProjectService;
-import service.ProjectService;
-import service.ProjectTasksService;
-import service.UsersService;
+import service.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,6 +42,9 @@ public class ProjectTaskController {
 
     @Autowired
     private ProjectTasksService projectTasksService;
+
+    @Autowired
+    private CompletedProjectTaskService completedProjectTaskService;
 
     @RequestMapping(value = "/list-project-names", method = RequestMethod.GET)
     public @ResponseBody
@@ -79,6 +82,23 @@ public class ProjectTaskController {
         return out.toString();
     }
 
+    @RequestMapping(value = "/list-project-tasks", method = RequestMethod.GET)
+    public @ResponseBody
+    String listProjects(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        List<ProjectTasks> projectTasksList = projectTasksService.listMyProjectTasks();
+        // List<CompletedUserTask> completedUserTaskList = completedUserTaskService.listCompletedUserTask();
+        OutputStream out = new ByteArrayOutputStream();
+        ObjectMapper mapper = new ObjectMapper();
+
+//        System.out.println(mapper.writeValueAsString(myTaskList.toString()));
+//        return mapper.writeValueAsString(myTaskList.toString());
+        mapper.writeValue(out, projectTasksList);
+
+//        final byte[] data = out.toByteArray();
+        System.out.println("\n\n\n===================="+out+"=================\n\n\n");
+        return out.toString();
+    }
 
     @RequestMapping(value = "/add-project-task", method = RequestMethod.POST)
     public @ResponseBody
@@ -112,4 +132,75 @@ ProjectTasks projectTasks = new ProjectTasks();
 //        return employee;
 //        return "redirect:/my-task.html";
     }
+
+    @RequestMapping(value = "/update-project-task", method = RequestMethod.GET)
+    public String updateProjectTask(@RequestParam("projectTaskId") long projectTaskId,
+                                 @RequestParam("completenessLevel") int completenessLevel){
+        projectTasksService.update(projectTaskId,completenessLevel);
+        return "redirect:/my-task.html#groupTasks";
+    }
+
+    @RequestMapping(value = "/complete-project-task", method = RequestMethod.GET)
+    public String completeProjectTask(@RequestParam("projectTaskId") long projectTaskId) throws ParseException {
+        ProjectTasks projectTasks;
+        CompletedProjectTask completedProjectTask = new CompletedProjectTask();
+        projectTasks = projectTasksService.getProjectTask(projectTaskId);
+        completedProjectTask.setProject_id(projectTasks.getProject_id());
+        completedProjectTask.setAsignee(projectTasks.getAsignee());
+        completedProjectTask.setProjectTaskName(projectTasks.getProjectTaskName());
+        completedProjectTask.setProjectTaskDiscription(projectTasks.getProjectTaskDiscription());
+        completedProjectTask.setStartedDate(projectTasks.getStartedDate());
+        completedProjectTask.setToBeCompleted(projectTasks.getToBeCompleted());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
+        Date now = new Date();
+        String strDate = dateFormat.format(now);
+        completedProjectTask.setCompletedDate(dateFormat.parse(strDate));
+
+        completedProjectTaskService.addProjectTask(completedProjectTask);
+        projectTasksService.deleteProjectTask(projectTasks);
+        return "redirect:/my-task.html#groupTasks";
+    }
+
+    @RequestMapping(value = "/notcomplete-project-task", method = RequestMethod.GET)
+    public String notComplete(@RequestParam("projectTaskId") long projectTaskId) throws ParseException {
+        CompletedProjectTask completedProjectTask;
+        ProjectTasks projectTasks = new ProjectTasks();
+        completedProjectTask = completedProjectTaskService.findProjectTaskById(projectTaskId);
+        projectTasks.setProject_id(completedProjectTask.getProject_id());
+        projectTasks.setAsignee(completedProjectTask.getAsignee());
+        projectTasks.setProjectTaskName(completedProjectTask.getProjectTaskName());
+        projectTasks.setProjectTaskDiscription(completedProjectTask.getProjectTaskDiscription());
+        projectTasks.setStartedDate(completedProjectTask.getStartedDate());
+        projectTasks.setToBeCompleted(completedProjectTask.getToBeCompleted());
+
+        projectTasksService.addProjectTask(projectTasks);
+        completedProjectTaskService.deleteProjectTask(completedProjectTask);
+        return "redirect:/my-task.html#groupTasks";
+    }
+
+    @RequestMapping(value = "/completed-project-tasks", method = RequestMethod.GET)
+    public @ResponseBody
+    String listCompletedProjectTasks(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        List<CompletedProjectTask> completedProjectTasks = completedProjectTaskService.listMyProjectTasks();
+        OutputStream out = new ByteArrayOutputStream();
+        ObjectMapper mapper = new ObjectMapper();
+
+//        System.out.println(mapper.writeValueAsString(myTaskList.toString()));
+//        return mapper.writeValueAsString(myTaskList.toString());
+        mapper.writeValue(out, completedProjectTasks);
+
+//        final byte[] data = out.toByteArray();
+        System.out.println(out);
+        return out.toString();
+    }
+
+//    @RequestMapping(value = "/delete-completed-project", method = RequestMethod.GET)
+//    public String deleteCompletedProject(@RequestParam("projectId") long projectId) throws ParseException {
+//        CompletedProject completedProject1 = new CompletedProject();
+//        completedProject1 = completedProjectService.findById(projectId);
+//        completedProjectService.deleteCompletedProject(completedProject1);
+//        return "redirect:/my-task.html#groupProjects";
+//    }
+
 }

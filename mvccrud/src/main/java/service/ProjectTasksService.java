@@ -23,4 +23,6 @@ public interface ProjectTasksService {
     public void updateProjectTask(long projectTaskId, int completenessLevel);
 
     public void findByProject(long project_id);
+
+    public void update(long projectTaskId, int completenessLevel);
 }

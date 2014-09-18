@@ -30,7 +30,7 @@ projectTasksDao.addProjectTask(projectTasks);
     @Override
     @Transactional
     public List<ProjectTasks> listMyProjectTasks() {
-        return null;
+        return projectTasksDao.listMyProjectTasks();
     }
 
     @Override
@@ -48,7 +48,7 @@ projectTasksDao.addProjectTask(projectTasks);
     @Override
     @Transactional
     public void deleteProjectTask(ProjectTasks projectTasks) {
-
+        projectTasksDao.deleteProjectTask(projectTasks);
     }
 
     @Override
@@ -67,5 +67,10 @@ projectTasksDao.addProjectTask(projectTasks);
     @Transactional
     public void findByProject(long project_id) {
 
+    }
+
+    @Override
+    public void update(long projectTaskId, int completenessLevel) {
+        projectTasksDao.update(projectTaskId, completenessLevel);
     }
 }
