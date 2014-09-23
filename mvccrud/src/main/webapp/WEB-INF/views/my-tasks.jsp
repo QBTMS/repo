@@ -94,6 +94,14 @@
             #projectTasksTitle { list-style-type: none; margin: 0; padding: 0; width: 100%; height: auto }
             #projectTasksTitle li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.0em; height: 40px; width: 100%;}
             #projectTasksTitle li span { position: absolute; margin-left: -1.3em; }
+
+            #completedProjectTasks { list-style-type: none; margin: 0; padding: 0; width: 100%; height: auto }
+            #completedProjectTasks li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.0em; height: 40px; width: 100%;}
+            #completedProjectTasks li span { position: absolute; margin-left: -1.3em; }
+
+            #completedProjectTasksTitle { list-style-type: none; margin: 0; padding: 0; width: 100%; height: auto }
+            #completedProjectTasksTitle li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.0em; height: 40px; width: 100%;}
+            #completedProjectTasksTitle li span { position: absolute; margin-left: -1.3em; }
         </style>
         <%--<script>--%>
 
@@ -594,7 +602,7 @@
 
             FusionCharts.ready(function(){
                 var revenueChart = new FusionCharts({
-                    type: "Pie2D",
+                    type: "Pie3D",
                     renderAt: "chartContainer1",
                     width: "500",
                     height: "300",
@@ -603,9 +611,13 @@
                         "chart": {
                             "caption": "Individual Summary",
                             "subCaption": "",
-                            "xAxisName": "Month",
-                            "yAxisName": "Revenues (In USD)",
-                            "theme": "zune"
+                            "xAxisName": "Tasks",
+                            "yAxisName": "Count",
+                            "enableSmartLabels": "0",
+                            "showPercentValues": "1",
+                            "showTooltip": "0",
+                            "decimals": "1",
+                            "theme": "fint"
                         },
                         "data": [
                             {
@@ -636,19 +648,19 @@
                             "subCaption": "",
                             "xAxisName": "Tasks",
                             "yAxisName": "Count",
-                            "theme": "zune"
+                            "theme": "fint"
                         },
                         "data": [
                             {
-                                "label": "Tasks Created",
+                                "label": "Created",
                                 "value": indSummary.tasksCreated
                             },
                             {
-                                "label": "Tasks Completed",
+                                "label": "Completed",
                                 "value": indSummary.tasksCompleted
                             },
                             {
-                                "label": "Tasks to complete",
+                                "label": "Left",
                                 "value": indSummary.tasksToComplete
                             }
                         ]
@@ -745,34 +757,34 @@
                                             '<option selected" >' +
                                             +this.completenessLevel+
                                             '</option>'+
-                                            '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=10\" >' +
+                                            '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+this.projectTaskId+'&completenessLevel=10\" >' +
                                             '10%'+
                                             '</option>'+
-                                            '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=20\" >' +
+                                            '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+this.projectTaskId+'&completenessLevel=20\" >' +
                                             '20%' +
                                             '</option>'+
-                                            '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=30\" >' +
+                                            '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+this.projectTaskId+'&completenessLevel=30\" >' +
                                             '30%'+
                                             '</option>'+
-                                            '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=40\" >'+
+                                            '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+this.projectTaskId+'&completenessLevel=40\" >'+
                                             '40%'+
                                             '</option>'+
-                                            '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=50\" >'+
+                                            '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+this.projectTaskId+'&completenessLevel=50\" >'+
                                             '50%'+
                                             '</option>'+
-                                            '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=60\" >'+
+                                            '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+this.projectTaskId+'&completenessLevel=60\" >'+
                                             '60%'+
                                             '</option>'+
-                                            '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=70\" >'+
+                                            '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+this.projectTaskId+'&completenessLevel=70\" >'+
                                             '70%'+
                                             '</option>'+
-                                            '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=80\" >'+
+                                            '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+this.projectTaskId+'&completenessLevel=80\" >'+
                                             '80%'+
                                             '</option>'+
-                                            '<option value=\"/mvccrud/update-project.html?projectId='+this.projectId+'&completenessLevel=90\" >'+
+                                            '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+this.projectTaskId+'&completenessLevel=90\" >'+
                                             '90%'+
                                             '</option>'+
-                                            '<option value=\"/mvccrud/complete-project.html?projectId='+this.projectId+'\" >'+
+                                            '<option value=\"/mvccrud/complete-project-task.html?projectTaskId='+this.projectTaskId+'\" >'+
                                             ' Mark as complete'+
                                             '</option>'+
                                             '</select>' +
@@ -786,6 +798,56 @@
             });
             /*
              * End of list my project tasks
+             * */
+
+            /*
+             * List completed project tasks
+             * */
+            jQuery.ajax({
+                url: "list-completed-project-tasks.html",
+                dataType:'json',
+                success: function (response) {
+                    $("#completedProjectTasksTitle").append("<li class=\"ui-state-default\"><table><tr><td width=\"20%\">Task Title</td><td width=\"20%\">Asignee</td><td width=\"20%\">Completed Date</td><td width=\"40%\"></td></tr></table></li>");
+                    var pName;
+                    $.each( listOfProjects, function( key, value ) {
+                        var id = this.projectId;
+                        var pn = this.projectName;
+                        $.each( listOfUsers, function( key, value ) {
+                            var uid = this.id;
+                            var uname = this.name;
+                            $("#completedProjectTasks").append("");
+                            $.each(response, function(){
+                                if(id == this.project_id && uid == this.asignee){
+                                    pName = pn;
+                                    pAsignee = uname;
+                                    $("#completedProjectTasks").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>" +
+                                            "<table><tr>" +
+                                            "<td width=\"20%\">"
+                                            + this.projectTaskName +
+                                            '</td>' +
+                                            "<td width=\"20%\">"
+                                            +pAsignee +
+                                            '</td>' +
+                                            '<td width=\"30%\">'
+                                            + new Date(this.completedDate).toLocaleDateString()+','+new Date(this.startedDate).toLocaleTimeString() +
+                                            '</td>' +
+                                            '<td width=\"40%\">'+
+                                            '<a href="/mvccrud/notcomplete-project-task.html?projectTaskId='+this.projectTaskId+'" >Mark as incomplete </a> '+
+                                            '</td>' +
+                                            '<td width=\"20%\">'+
+                                            '<a href="/mvccrud/delete-completed-project-task.html?projectTaskId='+this.projectTaskId+'" >Delete </a> '+
+                                            '</td>' +
+                                    '</li>')
+                                }
+                            });
+                        });
+
+                    });
+                }
+            });
+
+            /*
+             * End of list completed project tasks
              * */
 
         </script>
@@ -1017,8 +1079,8 @@
                 </ul>
 
                 <div class="row">
-                    <div class="col-md-5">
-                        <h3>Add new Project</h3>
+                    <div class="col-md-3">
+                        <h3>Add new Project Task</h3>
                         <form class='form-inline' name="employeeForm" method="post">
                             <fieldset>
                                 <div class="control-group">
@@ -1026,7 +1088,7 @@
                                     <label class="control-label">Project</label>
                                     <div class="controls"><select name="project_id" id="project_id" class="input-xlarge"></select>
                                     </div>
-                                </div>
+                                </div>s
 
                                 <div class="control-group">
                                     <!-- Username -->
@@ -1079,8 +1141,9 @@
 
                     </div>
 
-                    <div class="col-md-7">
-                        <h3>Completed Project List</h3>
+                    <div class="col-md-9">
+                        <h3>Completed Project Task List</h3>
+                        <ul id="completedProjectTasksTitle"></ul>
                         <ul id="completedProjectTasks">
                         </ul>
 

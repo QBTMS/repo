@@ -42,7 +42,7 @@ projectTasksDao.addProjectTask(projectTasks);
     @Override
     @Transactional
     public ProjectTasks getProjectTask(long projectTaskId) {
-        return null;
+        return projectTasksDao.getProjectTask(projectTaskId);
     }
 
     @Override

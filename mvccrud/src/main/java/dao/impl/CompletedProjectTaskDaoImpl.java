@@ -11,6 +11,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,11 +33,34 @@ public class CompletedProjectTaskDaoImpl implements CompletedProjectTaskDao{
 
     @Override
     public List<CompletedProjectTask> listMyProjectTasks() {
-        Project project;
-        project = (Project) projectDao.listMyProject();
-        long project_id = project.getProjectId();
-        return (List<CompletedProjectTask>) sessionFactory.getCurrentSession().createQuery("from model.CompletedProjectTask cpt where cpt.project_id = '"+project_id+"'").list();
+        List<Project> projectList;
+        List<CompletedProjectTask> tempProjectTasksList = null;
+        List<CompletedProjectTask> projectTasksList = new ArrayList<>();
+        projectList =  projectDao.listMyProject();
+        System.out.println("++++\nPL"+projectList.toString());
+        if (projectList != null){
+            for(int i = 0; i < projectList.size(); i++){
+                long project_id = projectList.get(i).getProjectId();
+                System.out.println("++++\nCPID"+project_id);
+                tempProjectTasksList = sessionFactory.getCurrentSession().createQuery("from model.CompletedProjectTask cpt where cpt.project_id = '"+project_id+"'").list();
+                System.out.println("++++\nCTPLSIZE"+tempProjectTasksList.size());
+                if (tempProjectTasksList != null){
+                    for(int x = 0; x < tempProjectTasksList.size(); x++){
+                        System.out.println("++++\nCI"+i);
+                        System.out.println("++++\nCX"+x);
+                        System.out.println("++++\nCTPTLITEM"+tempProjectTasksList.get(0));
+                        projectTasksList.add(tempProjectTasksList.get(x));
+                    }
+                    tempProjectTasksList.clear();
+                }
+            }
+        }
+
+        System.out.println("++++\nCTPTL"+tempProjectTasksList.toString());
+        System.out.println("++++\nCPTL"+projectTasksList.toString());
+        return projectTasksList;
     }
+
 
     @Override
     public List<CompletedProjectTask> listAsignedProjectTasks() {

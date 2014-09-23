@@ -67,7 +67,7 @@ public class ProjectTasksDaoImpl implements ProjectTasksDao {
 
     @Override
     public ProjectTasks getProjectTask(long projectTaskId) {
-        return null;
+        return (ProjectTasks) sessionFactory.getCurrentSession().get(ProjectTasks.class, projectTaskId);
     }
 
     @Override

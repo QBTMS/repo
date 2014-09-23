@@ -100,6 +100,24 @@ public class ProjectTaskController {
         return out.toString();
     }
 
+    @RequestMapping(value = "/list-completed-project-tasks", method = RequestMethod.GET)
+    public @ResponseBody
+    String listCompletedProjects(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        List<CompletedProjectTask> completedProjectTasks = completedProjectTaskService.listMyProjectTasks();
+        // List<CompletedUserTask> completedUserTaskList = completedUserTaskService.listCompletedUserTask();
+        OutputStream out = new ByteArrayOutputStream();
+        ObjectMapper mapper = new ObjectMapper();
+
+//        System.out.println(mapper.writeValueAsString(myTaskList.toString()));
+//        return mapper.writeValueAsString(myTaskList.toString());
+        mapper.writeValue(out, completedProjectTasks);
+
+//        final byte[] data = out.toByteArray();
+        System.out.println("\n\n\n===================="+out+"=================\n\n\n");
+        return out.toString();
+    }
+
     @RequestMapping(value = "/add-project-task", method = RequestMethod.POST)
     public @ResponseBody
     String addProjectTask(HttpServletRequest request, HttpServletResponse response)
@@ -195,12 +213,11 @@ ProjectTasks projectTasks = new ProjectTasks();
         return out.toString();
     }
 
-//    @RequestMapping(value = "/delete-completed-project", method = RequestMethod.GET)
-//    public String deleteCompletedProject(@RequestParam("projectId") long projectId) throws ParseException {
-//        CompletedProject completedProject1 = new CompletedProject();
-//        completedProject1 = completedProjectService.findById(projectId);
-//        completedProjectService.deleteCompletedProject(completedProject1);
-//        return "redirect:/my-task.html#groupProjects";
-//    }
-
+    @RequestMapping(value = "/delete-completed-project-task", method = RequestMethod.GET)
+    public String deleteCompletedProject(@RequestParam("projectTaskId") long projectTaskId) throws ParseException {
+        CompletedProjectTask completedProjectTask;
+        completedProjectTask = completedProjectTaskService.findProjectTaskById(projectTaskId);
+        completedProjectTaskService.deleteProjectTask(completedProjectTask);
+        return "redirect:/my-task.html#groupTasks";
+    }
 }
