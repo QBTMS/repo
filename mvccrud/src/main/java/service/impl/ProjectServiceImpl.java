@@ -38,6 +38,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public List<Project> listAllProjects() {
+        return projectDao.listAllProjects();
+    }
+
+    @Override
     @Transactional
     public List<Project> listAsignedProject() {
         return null;
@@ -65,5 +70,10 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     public void update(long projectId, int completenessLevel) {
 projectDao.update(projectId,completenessLevel);
+    }
+
+    @Override
+    public int projectCount() {
+        return projectDao.projectCount();
     }
 }

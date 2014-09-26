@@ -65,4 +65,11 @@ public class CompletedProjectDaoImpl implements CompletedProjectDao {
     public void completedUpdate(long projectId, int completenessLevel) {
 
     }
+
+
+    @Override
+    public int completedProjectCount() {
+        List<CompletedProject> list = listMyCompletedProject();
+        return list.size();
+    }
 }

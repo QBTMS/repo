@@ -1,9 +1,6 @@
 package controller;
 
-import model.CompletedProjectTask;
-import model.Project;
-import model.ProjectTasks;
-import model.Users;
+import model.*;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.PortResolverImpl;
@@ -213,11 +210,76 @@ ProjectTasks projectTasks = new ProjectTasks();
         return out.toString();
     }
 
+    @RequestMapping(value = "/all-completed-project-tasks", method = RequestMethod.GET)
+    public @ResponseBody
+    String listAllCompletedProjectTasks(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        List<CompletedProjectTask> completedProjectTasks = completedProjectTaskService.allCompletedProjectTasks();
+        OutputStream out = new ByteArrayOutputStream();
+        ObjectMapper mapper = new ObjectMapper();
+
+//        System.out.println(mapper.writeValueAsString(myTaskList.toString()));
+//        return mapper.writeValueAsString(myTaskList.toString());
+        mapper.writeValue(out, completedProjectTasks);
+
+//        final byte[] data = out.toByteArray();
+        System.out.println("\n\nCCCCCCCCCCCCCCCCCCCCCCC"+out);
+        return out.toString();
+    }
+
     @RequestMapping(value = "/delete-completed-project-task", method = RequestMethod.GET)
     public String deleteCompletedProject(@RequestParam("projectTaskId") long projectTaskId) throws ParseException {
         CompletedProjectTask completedProjectTask;
         completedProjectTask = completedProjectTaskService.findProjectTaskById(projectTaskId);
         completedProjectTaskService.deleteProjectTask(completedProjectTask);
         return "redirect:/my-task.html#groupTasks";
+    }
+
+    @RequestMapping(value = "/list-asigned-project-tasks", method = RequestMethod.GET)
+    public @ResponseBody
+    String listAsignedProjects(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        List<ProjectTasks> projectTasksList = projectTasksService.listAsignedProjectTasks();
+        // List<CompletedUserTask> completedUserTaskList = completedUserTaskService.listCompletedUserTask();
+        OutputStream out = new ByteArrayOutputStream();
+        ObjectMapper mapper = new ObjectMapper();
+
+//        System.out.println(mapper.writeValueAsString(myTaskList.toString()));
+//        return mapper.writeValueAsString(myTaskList.toString());
+        mapper.writeValue(out, projectTasksList);
+
+//        final byte[] data = out.toByteArray();
+        System.out.println("\n\n\nAsigned===================="+out+"=================\n\n\n");
+        return out.toString();
+    }
+
+    @RequestMapping(value = "/project-count", method = RequestMethod.GET)
+    public @ResponseBody
+    String getProjectCounts(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+         int projectsCreated = projectService.projectCount();
+         int projectsCompleted = completedProjectService.completedProjectCount();
+         int groupTasksCreated = projectTasksService.taskCreatedCount();
+         int groupTasksReceived = projectTasksService.taskReceivedCount();
+         int groupTasksCompleted = completedProjectTaskService.taskCompletedCount();
+
+        ProjectCounts projectCounts = new ProjectCounts();
+
+        projectCounts.setProjectsCreated(projectsCreated);
+        projectCounts.setProjectsCompleted(projectsCompleted);
+        projectCounts.setGroupTasksCreated(groupTasksCreated);
+        projectCounts.setGroupTasksCompleted(groupTasksCompleted);
+        projectCounts.setGroupTasksReceived(groupTasksReceived);
+
+        OutputStream out = new ByteArrayOutputStream();
+        ObjectMapper mapper = new ObjectMapper();
+
+//        System.out.println(mapper.writeValueAsString(myTaskList.toString()));
+//        return mapper.writeValueAsString(myTaskList.toString());
+        mapper.writeValue(out, projectCounts);
+
+//        final byte[] data = out.toByteArray();
+        System.out.println("\n\n\nProject Counts==============="+out);
+        return out.toString();
     }
 }

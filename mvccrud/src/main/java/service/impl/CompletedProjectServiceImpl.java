@@ -54,4 +54,9 @@ completedProjectDao.deleteCompletedProject(completedproject);
     public void completedUpdate(long projectId, int completenessLevel) {
 
     }
+
+    @Override
+    public int completedProjectCount() {
+        return completedProjectDao.completedProjectCount();
+    }
 }

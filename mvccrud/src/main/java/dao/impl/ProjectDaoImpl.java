@@ -44,6 +44,11 @@ public class ProjectDaoImpl implements ProjectDao {
     }
 
     @Override
+    public List<Project> listAllProjects() {
+        return (List<Project>) sessionFactory.getCurrentSession().createQuery("from model.Project").list();
+    }
+
+    @Override
     public List<Project> listMyProjectNames() {
         int ownerId = userDao.getUserId();
 //        String hql = "SELECT P.projectName,P.projectId FROM model.Project P WHERE P.owner = :ownerId";
@@ -100,4 +105,12 @@ public class ProjectDaoImpl implements ProjectDao {
         query.setParameter("completenessLevel", completenessLevel);
         query.executeUpdate();
     }
+
+    @Override
+    public int projectCount() {
+        List<Project> list = listMyProject();
+
+        return list.size();
+    }
+
 }

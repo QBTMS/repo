@@ -14,6 +14,8 @@ public interface ProjectService {
 
     public List<Project> listMyProjectNames();
 
+    public List<Project> listAllProjects();
+
     public List<Project> listAsignedProject();
 
     public Project getProject(long projectId);
@@ -23,4 +25,7 @@ public interface ProjectService {
     public Project findById(long projectId);
 
     public void update(long projectId, int completenessLevel);
+
+    public int projectCount();
+
 }

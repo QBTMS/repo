@@ -96,12 +96,28 @@
             #projectTasksTitle li span { position: absolute; margin-left: -1.3em; }
 
             #completedProjectTasks { list-style-type: none; margin: 0; padding: 0; width: 100%; height: auto }
-            #completedProjectTasks li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.0em; height: 40px; width: 100%;}
+            #completedProjectTasks li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.0em; height: 60px; width: 100%;}
             #completedProjectTasks li span { position: absolute; margin-left: -1.3em; }
 
             #completedProjectTasksTitle { list-style-type: none; margin: 0; padding: 0; width: 100%; height: auto }
             #completedProjectTasksTitle li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.0em; height: 40px; width: 100%;}
             #completedProjectTasksTitle li span { position: absolute; margin-left: -1.3em; }
+
+            #receivedProjectTasksTitle { list-style-type: none; margin: 0; padding: 0; width: 100%; height: auto }
+            #receivedProjectTasksTitle li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.0em; height: 40px; width: 100%;}
+            #receivedProjectTasksTitle li span { position: absolute; margin-left: -1.3em; }
+
+            #receivedProjectTasks { list-style-type: none; margin: 0; padding: 0; width: 100%; height: auto }
+            #receivedProjectTasks li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.0em; height: 45px; width: 100%;}
+            #receivedProjectTasks li span { position: absolute; margin-left: -1.3em; }
+
+            #receivedCompletedProjectTasksTitle { list-style-type: none; margin: 0; padding: 0; width: 100%; height: auto }
+            #receivedCompletedProjectTasksTitle li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.0em; height: 40px; width: 100%;}
+            #receivedCompletedProjectTasksTitle li span { position: absolute; margin-left: -1.3em; }
+
+            #receivedCompletedProjectTasks { list-style-type: none; margin: 0; padding: 0; width: 100%; height: auto }
+            #receivedCompletedProjectTasks li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.0em; height: 45px; width: 100%;}
+            #receivedCompletedProjectTasks li span { position: absolute; margin-left: -1.3em; }
         </style>
         <%--<script>--%>
 
@@ -131,7 +147,9 @@
             var listOfTask = [];
             var listOfProjects = [];
             var listOfUsers = [];
+            var allProjects = [];
             var indSummary;
+            var projectSummary;
             jQuery.ajax({
 
                 url: "add-task.html",
@@ -210,6 +228,11 @@
                 $( "#projectTasks" ).disableSelection();
             });
 
+            $(function() {
+                $( "#receivedProjectTasks" ).sortable();
+                $( "#receivedProjectTasks" ).disableSelection();
+            });
+
             /*
             *
             * Do empty div
@@ -263,6 +286,9 @@
 
             $(function() {
                 $( "#myTab" ).tabs();
+            });
+            $(function() {
+                $( "#myTab2" ).tabs();
             });
 
             function madeAjaxCall(){
@@ -576,7 +602,108 @@
              * End of add project task
              * */
 
+            /*
+             * Summary project
+             * */
+            jQuery.ajax({
+                url: "project-count.html",
+                dataType:'json',
+                success: function (response) {
+                    $("#projectCount").append("");
+                    projectSummary = response;
+                    $("#projectCount").append("<li >" +
+                            "<p>Project created: " +
+                            + response.projectsCreated +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
+                            "Project Completed: " +
+                            + response.projectsCompleted +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
+                            "Group Tasks Created: " +
+                            + response.groupTasksCreated +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
+                            "Group Tasks Received: " +
+                            + response.groupTasksReceived +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
+                            "Group Tasks Completed: " +
+                            + response.groupTasksCompleted +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
+                            '</p>'+
+                            '</li>')
+                }
+            });
 
+            FusionCharts.ready(function(){
+                var revenueChart = new FusionCharts({
+                    type: "Pie3D",
+                    renderAt: "chartContainer3",
+                    width: "500",
+                    height: "300",
+                    dataFormat: "json",
+                    dataSource: {
+                        "chart": {
+                            "caption": "Project Summary",
+                            "subCaption": "",
+                            "xAxisName": "Projects",
+                            "yAxisName": "Count",
+                            "enableSmartLabels": "0",
+                            "showPercentValues": "1",
+                            "showTooltip": "0",
+                            "decimals": "1",
+                            "theme": "fint"
+                        },
+                        "data": [
+                            {
+                                "label": "Projects Completed",
+                                "value": projectSummary.projectsCompleted
+                            },
+                            {
+                                "label": "Projects to complete",
+                                "value": projectSummary.projectsCreated - projectSummary.projectsCompleted
+                            }
+                        ]
+                    }
+
+                });
+                revenueChart.render("chartContainer3");
+            });
+
+            FusionCharts.ready(function(){
+                var revenueChart = new FusionCharts({
+                    type: "Column2D",
+                    renderAt: "chartContainer4",
+                    width: "500",
+                    height: "300",
+                    dataFormat: "json",
+                    dataSource: {
+                        "chart": {
+                            "caption": "Project Tasks Summary",
+                            "subCaption": "",
+                            "xAxisName": "Tasks",
+                            "yAxisName": "Count",
+                            "theme": "fint"
+                        },
+                        "data": [
+                            {
+                                "label": "Created",
+                                "value": projectSummary.groupTasksCreated
+                            },
+                            {
+                                "label": "Completed",
+                                "value": projectSummary.groupTasksCompleted
+                            },
+                            {
+                                "label": "Received",
+                                "value": projectSummary.groupTasksReceived
+                            },
+                            {
+                                "label": "To complete",
+                                "value": projectSummary.groupTasksCreated - projectSummary.groupTasksCompleted
+                            }
+                        ]
+                    }
+
+                });
+                revenueChart.render("chartContainer4");
+            });
+
+            /*
+             * End of summary project
+             */
 
 
         /*
@@ -638,7 +765,7 @@
             FusionCharts.ready(function(){
                 var revenueChart = new FusionCharts({
                     type: "Column2D",
-                    renderAt: "chartContainer1",
+                    renderAt: "chartContainer2",
                     width: "500",
                     height: "300",
                     dataFormat: "json",
@@ -674,6 +801,9 @@
              * End of summary individual
              */
 
+
+
+
     /*
     * List all users
     * */
@@ -701,6 +831,14 @@
                         $("#project_id").append('<option value='+this.projectId+'>' +this.projectName+'</option>');
                     });
 
+                }
+            });
+
+            jQuery.ajax({
+                url: "list-all-projects.html",
+                dataType:'json',
+                success: function (response) {
+                    allProjects = response;
                 }
             });
 
@@ -807,7 +945,7 @@
                 url: "list-completed-project-tasks.html",
                 dataType:'json',
                 success: function (response) {
-                    $("#completedProjectTasksTitle").append("<li class=\"ui-state-default\"><table><tr><td width=\"20%\">Task Title</td><td width=\"20%\">Asignee</td><td width=\"20%\">Completed Date</td><td width=\"40%\"></td></tr></table></li>");
+                    $("#completedProjectTasksTitle").append("<li class=\"ui-state-default\"><table><tr><td width=\"30%\">Task Title</td><td width=\"30%\">Asignee</td><td width=\"50%\">Completed Date</td><td width=\"40%\"></td></tr></table></li>");
                     var pName;
                     $.each( listOfProjects, function( key, value ) {
                         var id = this.projectId;
@@ -822,19 +960,19 @@
                                     pAsignee = uname;
                                     $("#completedProjectTasks").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>" +
                                             "<table><tr>" +
-                                            "<td width=\"20%\">"
+                                            "<td width=\"30%\">"
                                             + this.projectTaskName +
                                             '</td>' +
-                                            "<td width=\"20%\">"
+                                            "<td width=\"30%\">"
                                             +pAsignee +
                                             '</td>' +
-                                            '<td width=\"30%\">'
+                                            '<td width=\"25%\">'
                                             + new Date(this.completedDate).toLocaleDateString()+','+new Date(this.startedDate).toLocaleTimeString() +
                                             '</td>' +
-                                            '<td width=\"40%\">'+
+                                            '<td width=\"35%\">'+
                                             '<a href="/mvccrud/notcomplete-project-task.html?projectTaskId='+this.projectTaskId+'" >Mark as incomplete </a> '+
                                             '</td>' +
-                                            '<td width=\"20%\">'+
+                                            '<td width=\"15%\">'+
                                             '<a href="/mvccrud/delete-completed-project-task.html?projectTaskId='+this.projectTaskId+'" >Delete </a> '+
                                             '</td>' +
                                     '</li>')
@@ -846,6 +984,170 @@
                 }
             });
 
+            /*
+             * End of list completed project tasks
+             * */
+
+
+
+            /*
+             * List received project tasks
+             *
+             * */
+            jQuery.ajax({
+                url: "list-asigned-project-tasks.html",
+                dataType:'json',
+                success: function (response) {
+                    $("#receivedProjectTasksTitle").append("<li class=\"ui-state-default\"><table><tr><td width=\"20%\">Task Title</td><td width=\"20%\">Project Name</td><td width=\"20%\">Assigner</td><td width=\"20%\">Started Date</td><td width=\"20%\">Target Date</td><td width=\"40%\">Level</td></tr></table></li>");
+                    var pName;
+                    var pn;
+                    var ownerId;
+                    var uname;
+                    var pOwner;
+                            $("#receivedProjectTasks").append("");
+                            $.each(response, function(){
+                                var id = this.project_id;
+                                var std = this.startedDate;
+                                var tbc = this.toBeCompleted;
+                                var cl = this.completenessLevel;
+                                var ptn = this.projectTaskName;
+                                var ptid = this.projectTaskId;
+                                $.each( allProjects, function( key, value ) {
+                                   if(id == this.projectId){
+                                       pn = this.projectName;
+                                       ownerId = this.owner;
+                                       $.each( listOfUsers, function( key, value ) {
+                                           if(parseInt(ownerId) == this.id){
+                                               uname = this.name;
+                                               pName = pn;
+                                               pOwner = uname;
+                                               $("#receivedProjectTasks").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>" +
+                                                       "<table><tr>" +
+                                                       "<td width=\"20%\">"
+                                                       +ptn +
+                                                       '</td>' +
+                                                       "<td width=\"20%\">"
+                                                       +pName +
+                                                       '</td>' +
+                                                       "<td width=\"20%\">"
+                                                       +pOwner +
+                                                       '</td>' +
+                                                       '<td width=\"20%\">'
+                                                       + new Date(std).toLocaleDateString()+','+new Date(std).toLocaleTimeString() +
+                                                       '</td>' +
+                                                       '<td width=\"20%\">'
+                                                       + new Date(tbc).toLocaleDateString()+','+new Date(tbc).toLocaleTimeString() +
+                                                       '</td>' +
+                                                       '<td width=\"40%\">'+
+                                                       '<select onChange=\"window.location.href=this.value\">' +
+                                                       '<option selected" >' +
+                                                       +cl+
+                                                       '</option>'+
+                                                       '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+ptid+'&completenessLevel=10\" >' +
+                                                       '10%'+
+                                                       '</option>'+
+                                                       '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+ptid+'&completenessLevel=20\" >' +
+                                                       '20%' +
+                                                       '</option>'+
+                                                       '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+ptid+'&completenessLevel=30\" >' +
+                                                       '30%'+
+                                                       '</option>'+
+                                                       '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+ptid+'&completenessLevel=40\" >'+
+                                                       '40%'+
+                                                       '</option>'+
+                                                       '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+ptid+'&completenessLevel=50\" >'+
+                                                       '50%'+
+                                                       '</option>'+
+                                                       '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+ptid+'&completenessLevel=60\" >'+
+                                                       '60%'+
+                                                       '</option>'+
+                                                       '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+ptid+'&completenessLevel=70\" >'+
+                                                       '70%'+
+                                                       '</option>'+
+                                                       '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+ptid+'&completenessLevel=80\" >'+
+                                                       '80%'+
+                                                       '</option>'+
+                                                       '<option value=\"/mvccrud/update-project-task.html?projectTaskId='+ptid+'&completenessLevel=90\" >'+
+                                                       '90%'+
+                                                       '</option>'+
+                                                       '<option value=\"/mvccrud/complete-project-task.html?projectTaskId='+ptid+'\" >'+
+                                                       ' Mark as complete'+
+                                                       '</option>'+
+                                                       '</select>' +
+                                                       '</li>')
+                                           }
+                                       });
+                                   }
+
+                        });
+
+                    });
+                }
+            });
+            /*
+             * End of list received project tasks
+             * */
+
+
+            /*
+             * List completed project tasks
+             *
+             * */
+            jQuery.ajax({
+                url: "all-completed-project-tasks.html",
+                dataType:'json',
+                success: function (response) {
+                    $("#receivedCompletedProjectTasksTitle").append("<li class=\"ui-state-default\"><table><tr><td width=\"20%\">Task Title</td><td width=\"20%\">Project Name</td><td width=\"20%\">Assigner</td><td width=\"20%\">Completed Date</td><td width=\"20%\"></td><td width=\"40%\"></td></tr></table></li>");
+                    var pName;
+                    var pn;
+                    var ownerId;
+                    var uname;
+                    var pOwner;
+                    $("#receivedCompletedProjectTasks").append("");
+                    $.each(response, function(){
+                        var id = this.project_id;
+                        var ptn = this.projectTaskName;
+                        var cd = this.completedDate;
+                        var ptid = this.projectTaskId;
+                        $.each( allProjects, function( key, value ) {
+                            if(id == this.projectId){
+                                pn = this.projectName;
+                                ownerId = this.owner;
+                                $.each( listOfUsers, function( key, value ) {
+                                    if(parseInt(ownerId) == this.id){
+                                        uname = this.name;
+                                        pName = pn;
+                                        pOwner = uname;
+                                        $("#receivedCompletedProjectTasks").append("<li class=\"ui-state-default\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>" +
+                                                "<table><tr>" +
+                                                "<td width=\"20%\">"
+                                                +ptn +
+                                                '</td>' +
+                                                "<td width=\"20%\">"
+                                                +pName +
+                                                '</td>' +
+                                                "<td width=\"20%\">"
+                                                +pOwner +
+                                                '</td>' +
+                                                '<td width=\"20%\">'
+                                                + new Date(cd).toLocaleDateString()+','+new Date(cd).toLocaleTimeString() +
+                                                '</td>' +
+                                                '<td width=\"35%\">'+
+                                                '<a href="/mvccrud/notcomplete-project-task.html?projectTaskId='+ptid+'" >Mark as incomplete </a> '+
+                                                '</td>' +
+                                                '<td width=\"15%\">'+
+                                                '<a href="/mvccrud/delete-completed-project-task.html?projectTaskId='+ptid+'" >Delete </a> '+
+                                                '</td>' +
+                                                '</li>')
+                                    }
+                                });
+                            }
+
+                        });
+
+                    });
+                }
+            });
             /*
              * End of list completed project tasks
              * */
@@ -920,9 +1222,7 @@
             <li id="indsummary"><a href="#myTaskSummary">Task Summary</a></li>
             <li><a href="#groupProjects">My Projects</a></li>
             <li><a href="#groupTasks">Project Tasks</a></li>
-            <li><a href="#groupTaskSummary">Tickets Summary</a></li>
-            <li><a href="#groupTaskCharts">Ticket Charts</a></li>
-            <li><a href="#overall">Overall</a></li>
+            <li><a href="#groupTaskSummary">Project Summary</a></li>
         </ul>
 
             <div id="myTask">
@@ -1072,104 +1372,118 @@
 
 
             <div id="groupTasks">
-                <h3>Project Task List</h3>
-                <ul id="projectTasksTitle">
-                </ul>
-                <ul id="projectTasks">
-                </ul>
-
-                <div class="row">
-                    <div class="col-md-3">
-                        <h3>Add new Project Task</h3>
-                        <form class='form-inline' name="employeeForm" method="post">
-                            <fieldset>
-                                <div class="control-group">
-                                    <!-- Username -->
-                                    <label class="control-label">Project</label>
-                                    <div class="controls"><select name="project_id" id="project_id" class="input-xlarge"></select>
-                                    </div>
-                                </div>s
-
-                                <div class="control-group">
-                                    <!-- Username -->
-                                    <label class="control-label">Asignee</label>
-                                    <div class="controls"><select name="asignee" id="asignee" class="input-xlarge"></select>
-                                    </div>
-                                </div>
-
-                                <div class="control-group">
-                                    <!-- Username -->
-                                    <label class="control-label">Task</label>
-                                    <div class="controls"><input type="text" name="projectTaskName" id="projectTaskName" class="input-xlarge" value="">
-                                    </div>
-                                </div>
-
-                                <div class="control-group">
-                                    <label class="control-label">Description</label>
-                                    <div class="controls"> <textarea name="projectTaskDiscription" id="projectTaskDiscription" class="input-xlarge" value=""></textarea>
-                                    </div></div>
-
-                                <div class="control-group">
-                                    <label class="control-label">Task Started date/time</label>
-                                    <div class="controls"><input type="text" name="startedDate" id="projectTaskStartedDate" >
-                                        <script>
-                                            AnyTime.picker( "projectTaskStartedDate",
-                                                    { format: "%M %d %Y %T", firstDOW: 1 } );
-                                        </script>
-                                    </div>
-                                </div>
-
-
-
-                                <div class="control-group">
-                                    <label class="control-label">Target date/time</label>
-                                    <div class="controls"><input type="text" name="toBeCompleted" id="projectTaskToBeCompleted">
-                                        <script>
-                                            AnyTime.picker( "projectTaskToBeCompleted",
-                                                    { format: "%M %d %Y %T", firstDOW: 1 } );
-                                        </script>
-                                    </div></div>
-
-                                <br />
-
-                                <div class="control-group">
-                                    <input type="button" class="btn btn-primary" value="Submit" onclick="addProjectTaskAjax();">
-                                </div>
-                            </fieldset>
-                        </form>
-
-
-                    </div>
-
-                    <div class="col-md-9">
-                        <h3>Completed Project Task List</h3>
-                        <ul id="completedProjectTasksTitle"></ul>
-                        <ul id="completedProjectTasks">
+                <div id="myTab2">
+                    <ul>
+                        <li><a href="#cpt">Created project tasks</a></li>
+                        <li><a href="#rpt">Received project tasks</a></li>
+                    </ul>
+                    <div id="cpt">
+                        <h3>Project Task List</h3>
+                        <ul id="projectTasksTitle">
+                        </ul>
+                        <ul id="projectTasks">
                         </ul>
 
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h3>Add new Project Task</h3>
+                                <form class='form-inline' name="employeeForm" method="post">
+                                    <fieldset>
+                                        <div class="control-group">
+                                            <!-- Username -->
+                                            <label class="control-label">Project</label>
+                                            <div class="controls"><select name="project_id" id="project_id" class="input-xlarge"></select>
+                                            </div>
+                                        </div>s
+
+                                        <div class="control-group">
+                                            <!-- Username -->
+                                            <label class="control-label">Asignee</label>
+                                            <div class="controls"><select name="asignee" id="asignee" class="input-xlarge"></select>
+                                            </div>
+                                        </div>
+
+                                        <div class="control-group">
+                                            <!-- Username -->
+                                            <label class="control-label">Task</label>
+                                            <div class="controls"><input type="text" name="projectTaskName" id="projectTaskName" class="input-xlarge" value="">
+                                            </div>
+                                        </div>
+
+                                        <div class="control-group">
+                                            <label class="control-label">Description</label>
+                                            <div class="controls"> <textarea name="projectTaskDiscription" id="projectTaskDiscription" class="input-xlarge" value=""></textarea>
+                                            </div></div>
+
+                                        <div class="control-group">
+                                            <label class="control-label">Task Started date/time</label>
+                                            <div class="controls"><input type="text" name="startedDate" id="projectTaskStartedDate" >
+                                                <script>
+                                                    AnyTime.picker( "projectTaskStartedDate",
+                                                            { format: "%M %d %Y %T", firstDOW: 1 } );
+                                                </script>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="control-group">
+                                            <label class="control-label">Target date/time</label>
+                                            <div class="controls"><input type="text" name="toBeCompleted" id="projectTaskToBeCompleted">
+                                                <script>
+                                                    AnyTime.picker( "projectTaskToBeCompleted",
+                                                            { format: "%M %d %Y %T", firstDOW: 1 } );
+                                                </script>
+                                            </div></div>
+
+                                        <br />
+
+                                        <div class="control-group">
+                                            <input type="button" class="btn btn-primary" value="Submit" onclick="addProjectTaskAjax();">
+                                        </div>
+                                    </fieldset>
+                                </form>
+
+
+                            </div>
+
+                            <div class="col-md-9">
+                                <h3>Completed Project Task List</h3>
+                                <ul id="completedProjectTasksTitle"></ul>
+                                <ul id="completedProjectTasks">
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="rpt">
+                        <h2>Received tasks</h2>
+                        <h3>To complete</h3>
+                        <ul id="receivedProjectTasksTitle"></ul>
+                        <ul id="receivedProjectTasks">
+                        </ul>
+
+                        <h3>Completed</h3>
+                        <ul id="receivedCompletedProjectTasksTitle"></ul>
+                        <ul id="receivedCompletedProjectTasks">
+                        </ul>
                     </div>
                 </div>
+
             </div>
 
 
 
             <div id="groupTaskSummary">
-                <p>jMeter is an Open Source testing software. It is 100% pure
-                    Java application for load and performance testing.</p>
-            </div>
-            <div id="groupTaskCharts">
-                <p>Enterprise Java Beans (EJB) is a development architecture
-                    for building highly scalable and robust enterprise level
-                    applications to be deployed on J2EE compliant
-                    Application Server such as JBOSS, Web Logic etc.
-                </p>
-            </div>
-            <div id="overall">
-                <p>Enterprise Java Beans (EJB) is a development architecture
-                    for building highly scalable and robust enterprise level
-                    applications to be deployed on J2EE compliant
-                    Application Server such as JBOSS, Web Logic etc.
-                </p>
+                <ul id="projectCount">
+
+                </ul>
+                <div class="row">
+                    <div class="col-md-5" id="chartContainer3"></div>
+                    <div class="col-md-7" id="chartContainer4"></div>
+                </div>
+
             </div>
     </div>
 

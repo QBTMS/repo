@@ -36,7 +36,7 @@ projectTasksDao.addProjectTask(projectTasks);
     @Override
     @Transactional
     public List<ProjectTasks> listAsignedProjectTasks() {
-        return null;
+        return projectTasksDao.listAsignedProjectTasks();
     }
 
     @Override
@@ -72,5 +72,15 @@ projectTasksDao.addProjectTask(projectTasks);
     @Override
     public void update(long projectTaskId, int completenessLevel) {
         projectTasksDao.update(projectTaskId, completenessLevel);
+    }
+
+    @Override
+    public int taskCreatedCount() {
+        return projectTasksDao.taskCreatedCount();
+    }
+
+    @Override
+    public int taskReceivedCount() {
+        return projectTasksDao.taskReceivedCount();
     }
 }

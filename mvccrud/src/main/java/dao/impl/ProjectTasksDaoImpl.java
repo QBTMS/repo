@@ -5,6 +5,7 @@ import dao.ProjectTasksDao;
 import dao.UserDao;
 import model.Project;
 import model.ProjectTasks;
+import model.Users;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class ProjectTasksDaoImpl implements ProjectTasksDao {
 
     @Autowired
     private ProjectDao projectDao;
+
+    @Autowired
+    private UserDao userDao;
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -62,7 +66,8 @@ public class ProjectTasksDaoImpl implements ProjectTasksDao {
 
     @Override
     public List<ProjectTasks> listAsignedProjectTasks() {
-        return null;
+        int asignee = userDao.getUserId();
+        return (List<ProjectTasks>) sessionFactory.getCurrentSession().createQuery("from model.ProjectTasks pt where pt.asignee = '"+asignee+"'").list();
     }
 
     @Override
@@ -101,5 +106,15 @@ public class ProjectTasksDaoImpl implements ProjectTasksDao {
         query.setParameter("projectTaskId", projectTaskId);
         query.setParameter("completenessLevel", completenessLevel);
         query.executeUpdate();
+    }
+
+    @Override
+    public int taskCreatedCount() {
+        return listMyProjectTasks().size();
+    }
+
+    @Override
+    public int taskReceivedCount() {
+        return listAsignedProjectTasks().size();
     }
 }

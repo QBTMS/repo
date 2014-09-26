@@ -12,6 +12,8 @@ public interface CompletedProjectTaskService {
 
     public List<CompletedProjectTask> listMyProjectTasks();
 
+    public List<CompletedProjectTask> allCompletedProjectTasks();
+
     public List<CompletedProjectTask> listAsignedProjectTasks();
 
     public CompletedProjectTask getProjectTask(long projectTaskId);
@@ -25,4 +27,7 @@ public interface CompletedProjectTaskService {
     public void findByProject(long project_id);
 
     public void update(long projectTaskId, int completenessLevel);
+
+    public int taskCompletedCount();
+
 }

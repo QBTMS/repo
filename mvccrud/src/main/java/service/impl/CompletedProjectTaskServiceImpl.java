@@ -34,6 +34,12 @@ public class CompletedProjectTaskServiceImpl implements CompletedProjectTaskServ
 
     @Override
     @Transactional
+    public List<CompletedProjectTask> allCompletedProjectTasks() {
+        return completedProjectTaskDao.allCompletedProjectTasks();
+    }
+
+    @Override
+    @Transactional
     public List<CompletedProjectTask> listAsignedProjectTasks() {
         return null;
     }
@@ -72,5 +78,10 @@ public class CompletedProjectTaskServiceImpl implements CompletedProjectTaskServ
     @Transactional
     public void update(long projectTaskId, int completenessLevel) {
 
+    }
+
+    @Override
+    public int taskCompletedCount() {
+        return completedProjectTaskDao.taskCompletedCount();
     }
 }

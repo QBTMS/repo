@@ -26,6 +26,9 @@ public class CompletedProjectTaskDaoImpl implements CompletedProjectTaskDao{
     @Autowired
     private ProjectDao projectDao;
 
+    @Autowired
+    private UserDao userDao;
+
     @Override
     public void addProjectTask(CompletedProjectTask projectTasks) {
             sessionFactory.getCurrentSession().saveOrUpdate(projectTasks);
@@ -59,6 +62,12 @@ public class CompletedProjectTaskDaoImpl implements CompletedProjectTaskDao{
         System.out.println("++++\nCTPTL"+tempProjectTasksList.toString());
         System.out.println("++++\nCPTL"+projectTasksList.toString());
         return projectTasksList;
+    }
+
+    @Override
+    public List<CompletedProjectTask> allCompletedProjectTasks() {
+        int asignee = userDao.getUserId();
+        return (List<CompletedProjectTask>) sessionFactory.getCurrentSession().createQuery("from model.CompletedProjectTask cpt where cpt.asignee = '"+asignee+"'").list();
     }
 
 
@@ -104,4 +113,10 @@ public class CompletedProjectTaskDaoImpl implements CompletedProjectTaskDao{
     public void update(long projectTaskId, int completenessLevel) {
 
     }
+
+    @Override
+    public int taskCompletedCount() {
+        return allCompletedProjectTasks().size();
+    }
+
 }

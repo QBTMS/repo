@@ -101,6 +101,24 @@ public class ProjectController {
         return out.toString();
     }
 
+    @RequestMapping(value = "/list-all-projects", method = RequestMethod.GET)
+    public @ResponseBody
+    String listAllProjects(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        List<Project> projectList = projectService.listAllProjects();
+        // List<CompletedUserTask> completedUserTaskList = completedUserTaskService.listCompletedUserTask();
+        OutputStream out = new ByteArrayOutputStream();
+        ObjectMapper mapper = new ObjectMapper();
+
+//        System.out.println(mapper.writeValueAsString(myTaskList.toString()));
+//        return mapper.writeValueAsString(myTaskList.toString());
+        mapper.writeValue(out, projectList);
+
+//        final byte[] data = out.toByteArray();
+        System.out.println("\n\n\n$$$$$$$$$$$$$$$$$$$$$$"+out);
+        return out.toString();
+    }
+
     @RequestMapping(value = "/update-project", method = RequestMethod.GET)
     public String updateUserTask(@RequestParam("projectId") long projectId,
                                  @RequestParam("completenessLevel") int completenessLevel){

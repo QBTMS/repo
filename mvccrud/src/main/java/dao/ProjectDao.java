@@ -12,6 +12,8 @@ public interface ProjectDao {
 
     public List<Project> listMyProject();
 
+    public List<Project> listAllProjects();
+
     public List<Project> listMyProjectNames();
 
     public List<Project> listAsignedProject();
@@ -23,4 +25,9 @@ public interface ProjectDao {
     public Project findById(long projectId);
 
     public void update(long projectId, int completenessLevel);
+
+    public int projectCount();
+
+
+
 }

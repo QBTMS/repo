@@ -21,4 +21,7 @@ public interface CompletedProjectService {
     public CompletedProject findById(long projectId);
 
     public void completedUpdate(long projectId, int completenessLevel);
+
+    public int completedProjectCount();
+
 }
